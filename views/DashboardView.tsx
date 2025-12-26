@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { AppState, View, ProblemType } from '../types';
-import { TONICS, PROBLEM_TO_TONIC } from '../constants';
-import { GlassCard } from '../components/GlassCard';
-import { Button } from '../components/Button';
+import { AppState, View, ProblemType } from '../types.ts';
+import { TONICS, PROBLEM_TO_TONIC } from '../constants.tsx';
+import { GlassCard } from '../components/GlassCard.tsx';
+import { Button } from '../components/Button.tsx';
 import { CheckCircle2, Clock, Calendar, TrendingUp, Gift, ArrowRight, Circle, ChevronRight, Zap, Timer, Activity, Flame, Sparkles, ShieldCheck, Beaker, BookOpen } from 'lucide-react';
 
 const iconMap: any = {

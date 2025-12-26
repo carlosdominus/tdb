@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Tonic, View } from '../types';
-import { GlassCard } from '../components/GlassCard';
-import { Button } from '../components/Button';
+import { Tonic, View } from '../types.ts';
+import { GlassCard } from '../components/GlassCard.tsx';
+import { Button } from '../components/Button.tsx';
 import { ChevronLeft, Info, Play, CheckSquare, Clock, Download, RefreshCcw, Zap, Timer, Activity, Flame, Sparkles, ShieldCheck, Beaker } from 'lucide-react';
 
 const iconMap: any = {
