@@ -1,5 +1,5 @@
 
-import { Tonic, ProblemType, Bonus } from './types';
+import { Tonic, ProblemType, Bonus } from './types.ts';
 
 export const COLORS = {
   primary: '#1B4D3E',
