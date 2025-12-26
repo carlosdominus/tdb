@@ -14,6 +14,7 @@ import { ProfileView } from './views/ProfileView';
 import { ScienceView } from './views/ScienceView';
 import { WarrantyView } from './views/WarrantyView';
 import { HelpView } from './views/HelpView';
+import { WelcomeModal } from './components/WelcomeModal';
 import { Logo } from './components/Logo';
 import { Sidebar } from './components/Sidebar';
 import { Beaker, TrendingUp, Gift, ChevronLeft, Menu, Home } from 'lucide-react';
@@ -26,7 +27,8 @@ const App: React.FC = () => {
     user: null,
     modules: INITIAL_MODULES,
     checklist: {},
-    isLoggedIn: false
+    isLoggedIn: false,
+    hasSeenWelcomeVideo: false
   });
 
   // Ensure scroll is at the top when switching views or tonics
@@ -88,10 +90,15 @@ const App: React.FC = () => {
       user: null,
       modules: INITIAL_MODULES,
       checklist: {},
-      isLoggedIn: false
+      isLoggedIn: false,
+      hasSeenWelcomeVideo: false
     });
     setCurrentView(View.LOGIN);
     localStorage.removeItem('protocolo_v2_state');
+  };
+
+  const closeWelcomeModal = () => {
+    setState(prev => ({ ...prev, hasSeenWelcomeVideo: true }));
   };
 
   const navigateToTonic = (id: string) => {
@@ -198,6 +205,14 @@ const App: React.FC = () => {
         onLogout={handleLogout}
         currentView={currentView}
       />
+
+      {/* Welcome Modal Disparado na primeira vez */}
+      {!state.hasSeenWelcomeVideo && state.user?.onboardingCompleted && (
+        <WelcomeModal 
+          userName={state.user.name.split(' ')[0]} 
+          onClose={closeWelcomeModal} 
+        />
+      )}
 
       <header className="fixed top-0 left-0 right-0 glass z-50 px-6 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">

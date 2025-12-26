@@ -99,6 +99,7 @@ export interface AppState {
   modules: Module[];
   checklist: Record<string, DailyChecklist>;
   isLoggedIn: boolean;
+  hasSeenWelcomeVideo?: boolean;
 }
 
 export enum View {
