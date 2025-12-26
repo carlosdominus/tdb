@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
-import { Logo } from '../components/Logo';
-import { GlassCard } from '../components/GlassCard';
-import { Button } from '../components/Button';
-import { ProblemType, UserProfile } from '../types';
+import { Logo } from '../components/Logo.tsx';
+import { GlassCard } from '../components/GlassCard.tsx';
+import { Button } from '../components/Button.tsx';
+import { ProblemType, UserProfile } from '../types.ts';
 import { Zap, Timer, Activity, Flame, ChevronRight } from 'lucide-react';
 
 interface OnboardingViewProps {
@@ -40,18 +40,18 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
 
   if (step === 1) {
     return (
-      <div className="min-h-screen bg-[#F5F5F7] py-10 px-6 flex flex-col items-center animate-in fade-in duration-700">
+      <div className="min-h-screen bg-[#F5F5F7] py-10 px-4 sm:px-6 flex flex-col items-center animate-in fade-in duration-700 overflow-x-hidden">
         <div className="w-16 h-16 text-[#1B4D3E] mb-8 bg-white p-3 rounded-2xl shadow-sm border border-gray-100">
           <Logo size={40} />
         </div>
         
-        <div className="text-center mb-10 max-w-sm">
+        <div className="text-center mb-8 max-w-sm">
           <h1 className="text-2xl font-bold text-[#1B4D3E] font-poppins uppercase tracking-tight">Personalize seu Plano</h1>
           <p className="text-[#86868B] mt-2 text-sm font-medium">Ajustaremos as doses para o seu caso específico.</p>
         </div>
 
-        <div className="w-full max-w-[420px] space-y-8">
-          <GlassCard className="p-8 space-y-6 bg-white border-none shadow-sm">
+        <div className="w-full max-w-[420px] space-y-6">
+          <GlassCard className="p-6 sm:p-8 space-y-6 bg-white border-none shadow-sm">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] ml-1">IDADE</label>
@@ -60,7 +60,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
                   placeholder="Ex: 35"
                   value={profile.age || ''}
                   onChange={e => setProfile({...profile, age: parseInt(e.target.value)})}
-                  className="w-full p-4 rounded-xl bg-[#F5F5F7] border-2 border-transparent focus:border-[#2ECC71] focus:bg-white transition-all outline-none font-bold text-center text-lg"
+                  className="w-full p-4 rounded-xl bg-[#F5F5F7] border-2 border-transparent focus:border-[#2ECC71] focus:bg-white transition-all outline-none font-bold text-center text-base sm:text-lg"
                 />
               </div>
 
@@ -71,7 +71,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
                   placeholder="Ex: 80"
                   value={profile.weight || ''}
                   onChange={e => setProfile({...profile, weight: parseInt(e.target.value)})}
-                  className="w-full p-4 rounded-xl bg-[#F5F5F7] border-2 border-transparent focus:border-[#2ECC71] focus:bg-white transition-all outline-none font-bold text-center text-lg"
+                  className="w-full p-4 rounded-xl bg-[#F5F5F7] border-2 border-transparent focus:border-[#2ECC71] focus:bg-white transition-all outline-none font-bold text-center text-base sm:text-lg"
                 />
               </div>
             </div>
@@ -83,14 +83,14 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
                   <button
                     key={p.id}
                     onClick={() => setProfile({...profile, mainProblem: p.id})}
-                    className={`text-left p-5 rounded-[24px] border border-transparent transition-all duration-300 flex items-center gap-5 shadow-sm ${profile.mainProblem === p.id ? 'gradient-primary text-white shadow-xl scale-[1.02]' : 'bg-white border-gray-100 hover:border-gray-200'}`}
+                    className={`text-left p-4 sm:p-5 rounded-[24px] border border-transparent transition-all duration-300 flex items-center gap-4 sm:gap-5 shadow-sm ${profile.mainProblem === p.id ? 'gradient-primary text-white shadow-xl scale-[1.02]' : 'bg-white border-gray-100 hover:border-gray-200'}`}
                   >
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${profile.mainProblem === p.id ? 'bg-white/20' : 'bg-[#F5F5F7] text-[#1B4D3E]'}`}>
-                       <span className="text-2xl">{p.icon}</span>
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 ${profile.mainProblem === p.id ? 'bg-white/20' : 'bg-[#F5F5F7] text-[#1B4D3E]'}`}>
+                       <span className="text-xl sm:text-2xl">{p.icon}</span>
                     </div>
-                    <div>
-                       <div className={`font-bold text-base leading-tight mb-1 ${profile.mainProblem === p.id ? 'text-white' : 'text-[#1D1D1F]'}`}>{p.label}</div>
-                       <div className={`text-xs leading-tight font-medium ${profile.mainProblem === p.id ? 'text-white/80' : 'text-[#86868B]'}`}>{p.desc}</div>
+                    <div className="flex-1">
+                       <div className={`font-bold text-sm sm:text-base leading-tight mb-1 ${profile.mainProblem === p.id ? 'text-white' : 'text-[#1D1D1F]'}`}>{p.label}</div>
+                       <div className={`text-[11px] sm:text-xs leading-tight font-medium ${profile.mainProblem === p.id ? 'text-white/80' : 'text-[#86868B]'}`}>{p.desc}</div>
                     </div>
                   </button>
                 ))}
@@ -101,7 +101,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
               fullWidth 
               disabled={!isFormValid}
               onClick={handleGenerate}
-              className="h-16 text-base font-black tracking-widest uppercase"
+              className="h-14 sm:h-16 text-sm sm:text-base font-black tracking-widest uppercase"
             >
               GERAR MEU PROTOCOLO
             </Button>
@@ -118,7 +118,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
   const selectedProb = PROBLEMS.find(p => p.id === profile.mainProblem);
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] py-16 px-6 flex flex-col items-center animate-in zoom-in duration-500">
+    <div className="min-h-screen bg-[#F5F5F7] py-16 px-6 flex flex-col items-center animate-in zoom-in duration-500 overflow-x-hidden">
       <div className="w-20 h-20 text-[#2ECC71] mb-10 bg-white p-4 rounded-3xl shadow-xl border border-gray-100">
         <Logo size={48} />
       </div>
@@ -128,7 +128,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
         <p className="text-[#86868B] mt-2 font-medium">Seu protocolo foi ajustado com sucesso.</p>
       </div>
 
-      <GlassCard className="w-full max-w-[420px] p-10 space-y-8 shadow-2xl relative overflow-hidden bg-white border-none">
+      <GlassCard className="w-full max-w-[420px] p-8 sm:p-10 space-y-8 shadow-2xl relative overflow-hidden bg-white border-none">
         <div className="absolute top-0 right-0 w-48 h-48 gradient-primary opacity-5 rounded-full -mr-24 -mt-24 blur-3xl"></div>
         
         <div className="space-y-3">
@@ -140,7 +140,7 @@ export const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) =>
         </div>
 
         <div className="space-y-6">
-          <div className="p-8 rounded-[32px] border-2 border-[#2ECC71]/10 bg-white shadow-xl relative group">
+          <div className="p-6 sm:p-8 rounded-[32px] border-2 border-[#2ECC71]/10 bg-white shadow-xl relative group">
              <div className="absolute -top-3 right-4 bg-yellow-400 text-[#1D1D1F] px-4 py-1.5 rounded-xl text-[10px] font-black shadow-lg uppercase tracking-widest z-20">
                 Principal
              </div>

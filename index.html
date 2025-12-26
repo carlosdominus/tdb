@@ -3,7 +3,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <title>Protocolo Força Natural</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
@@ -13,6 +13,8 @@
         background-color: #F5F5F7;
         color: #1D1D1F;
         -webkit-font-smoothing: antialiased;
+        /* Evita bounce de scroll indesejado em dispositivos móveis */
+        overscroll-behavior-y: none;
       }
       h1, h2, h3, .font-poppins {
         font-family: 'Poppins', sans-serif;
@@ -53,6 +55,11 @@
       }
       .animate-pulse-glow {
         animation: pulse-glow 2s infinite;
+      }
+
+      /* Fix para inputs no iOS não darem zoom automático */
+      input, select, textarea {
+        font-size: 16px !important;
       }
     </style>
     <script>

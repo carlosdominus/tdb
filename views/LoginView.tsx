@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Logo } from '../components/Logo';
+import { Logo } from '../components/Logo.tsx';
 import { User, Mail } from 'lucide-react';
 
 interface LoginViewProps {
@@ -56,7 +56,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Seu nome"
-                  className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none text-[#1D1D1F] placeholder-gray-400 text-sm font-medium"
+                  className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none text-[#1D1D1F] placeholder-gray-400 text-base font-medium"
                   required
                 />
               </div>
@@ -73,7 +73,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none text-[#1D1D1F] placeholder-gray-400 text-sm font-medium"
+                  className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none text-[#1D1D1F] placeholder-gray-400 text-base font-medium"
                   required
                 />
               </div>
@@ -81,7 +81,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
             <button 
               type="submit"
-              className="w-full bg-[#1B4D3E] text-white py-4 rounded-[20px] font-bold text-base shadow-[0_8px_20px_rgba(27,77,62,0.2)] hover:shadow-[0_12px_28px_rgba(27,77,62,0.25)] active:scale-[0.98] transition-all mt-4 uppercase tracking-widest"
+              className="w-full bg-[#1B4D3E] text-white py-4 rounded-[20px] font-bold text-base shadow-[0_8px_20px_rgba(27,77,62,0.2)] hover:shadow-[0_12px_28_rgba(27,77,62,0.25)] active:scale-[0.98] transition-all mt-4 uppercase tracking-widest"
             >
               ENTRAR
             </button>
