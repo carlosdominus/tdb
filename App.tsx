@@ -14,6 +14,8 @@ import { ProfileView } from './views/ProfileView.tsx';
 import { ScienceView } from './views/ScienceView.tsx';
 import { WarrantyView } from './views/WarrantyView.tsx';
 import { HelpView } from './views/HelpView.tsx';
+import { ExclusivePackageView } from './views/ExclusivePackageView.tsx';
+import { ExclusivePackage2View } from './views/ExclusivePackage2View.tsx';
 import { WelcomeModal } from './components/WelcomeModal.tsx';
 import { Logo } from './components/Logo.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
@@ -183,6 +185,10 @@ const App: React.FC = () => {
         return <HelpView onBack={() => setCurrentView(View.DASHBOARD)} />;
       case View.MODULE:
         return <ModuleView module={state.modules[0]} onBack={() => setCurrentView(View.DASHBOARD)} onNavigate={setCurrentView} />;
+      case View.EXCLUSIVE_PACKAGE:
+        return <ExclusivePackageView onBack={() => setCurrentView(View.CATALOG)} />;
+      case View.EXCLUSIVE_PACKAGE_2:
+        return <ExclusivePackage2View onBack={() => setCurrentView(View.CATALOG)} />;
       default:
         return <DashboardView state={state} onNavigate={setCurrentView} onTonicNavigate={navigateToTonic} onTonicToggle={toggleTonicCheck} />;
     }

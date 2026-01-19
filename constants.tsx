@@ -17,9 +17,9 @@ export const TONICS: Record<string, Tonic> = {
     icon: 'Zap',
     type: 'main',
     category: 'broxada',
-    timing: 'Manhã (jejum)',
-    serve: 'Ativa a circulação imediata para garantir que o pau suba e fique firme do início ao fim.',
-    benefits: ['Firmeza total', 'Não cai no meio', 'Mais sangue lá embaixo'],
+    timing: 'Manhã (jejum leve)',
+    serve: 'Esse tônico ajuda o corpo a funcionar melhor na hora H, apoiando a circulação e a resposta natural do organismo.',
+    benefits: ['Apoio à circulação', 'Melhor resposta natural', 'Sustenta o vigor'],
     ingredients: [
       { name: 'Água morna', qty: '1 copo' },
       { name: 'Suco de limão', qty: '1/2 limão' },
@@ -27,12 +27,12 @@ export const TONICS: Record<string, Tonic> = {
       { name: 'Mel', qty: '1 colher de chá' }
     ],
     instructions: [
-      'Esprema o limão no copo',
-      'Adicione a água morna',
-      'Coloque o bicarbonato e aguarde a espuma baixar',
-      'Misture o mel e beba imediatamente'
+      'Aqueça a água levemente (não deixe ferver)',
+      'Esprema o meio limão no copo',
+      'Adicione o bicarbonato e aguarde a reação inicial',
+      'Misture o mel e beba ainda morno'
     ],
-    tips: ['O segredo é a temperatura da água', 'Beba em jejum']
+    tips: ['Beba em jejum leve para melhor absorção']
   },
   'anti-gozada': {
     id: 'anti-gozada',
@@ -40,22 +40,22 @@ export const TONICS: Record<string, Tonic> = {
     icon: 'Timer',
     type: 'main',
     category: 'gozo-rapido',
-    timing: 'Noite (antes de deitar)',
-    serve: 'Acalma os nervos e controla a ansiedade para você durar o tempo que quiser na cama.',
-    benefits: ['Controle do gozo', 'Mais tempo de ato', 'Menos ansiedade'],
+    timing: 'Noite (1h antes de dormir)',
+    serve: 'Muito usado pra acalmar o corpo, reduzir tensão e ajudar no controle durante o sexo.',
+    benefits: ['Calma corporal', 'Redução de tensão', 'Controle natural'],
     ingredients: [
-      { name: 'Água em temperatura ambiente', qty: '200ml' },
-      { name: 'Suco de limão', qty: '1/2 limão' },
+      { name: 'Água', qty: '1 copo' },
+      { name: 'Chá de camomila ou erva-doce', qty: '1 xícara morna' },
       { name: 'Bicarbonato', qty: '1 colher de café rasa' },
-      { name: 'Canela em pó', qty: '1 pitada' }
+      { name: 'Mel', qty: '1 colher de chá' }
     ],
     instructions: [
-      'Misture o limão na água',
-      'Adicione o bicarbonato lentamente',
-      'Finalize com a canela',
-      'Beba calmamente 1h antes de dormir'
+      'Prepare uma infusão concentrada de camomila ou erva-doce',
+      'Misture com um copo de água se preferir diluir',
+      'Adicione o bicarbonato e o mel',
+      'Beba calmamente saboreando o momento de relaxamento'
     ],
-    tips: ['Ambiente escuro ajuda o tônico a agir melhor']
+    tips: ['Tome todos os dias à noite para efeito acumulativo']
   },
   'pau-de-rocha': {
     id: 'pau-de-rocha',
@@ -63,22 +63,23 @@ export const TONICS: Record<string, Tonic> = {
     icon: 'Activity',
     type: 'main',
     category: 'pau-meia-bomba',
-    timing: 'Tarde (15h - 17h)',
-    serve: 'Dureza extrema. Transforma o pau meia-bomba em um pau de ferro através do óxido nítrico.',
-    benefits: ['Pau de ferro', 'Rigidez matinal', 'Veias saltadas'],
+    timing: 'Meio da tarde',
+    serve: 'Esse tônico dá suporte à energia corporal e à firmeza natural do desempenho masculino.',
+    benefits: ['Energia corporal', 'Firmeza natural', 'Suporte ao desempenho'],
     ingredients: [
-      { name: 'Água filtrada', qty: '1 copo' },
-      { name: 'Suco de limão', qty: '1 limão inteiro' },
-      { name: 'Bicarbonato', qty: '1 colher de café cheia' },
-      { name: 'Gengibre em pó', qty: '1 pitada' }
+      { name: 'Água', qty: '1 copo' },
+      { name: 'Gengibre ralado', qty: '1 colher de chá' },
+      { name: 'Canela em pó', qty: '1 pitada' },
+      { name: 'Bicarbonato', qty: '1 colher de café rasa' },
+      { name: 'Mel', qty: '1 colher de chá' }
     ],
     instructions: [
-      'Misture o limão e o gengibre',
-      'Adicione a água',
-      'Coloque o bicarbonato e misture bem',
-      'Beba na hora'
+      'Coloque o gengibre ralado na água',
+      'Adicione a pitada de canela e o bicarbonato',
+      'Misture o mel até dissolver bem',
+      'Consuma no meio da tarde'
     ],
-    tips: ['O segredo é consumir fresco']
+    tips: ['Não use à noite para não interferir no sono']
   },
   'tesao-de-touro': {
     id: 'tesao-de-touro',
@@ -86,21 +87,23 @@ export const TONICS: Record<string, Tonic> = {
     icon: 'Flame',
     type: 'main',
     category: 'sem-tesao',
-    timing: 'Manhã ou pré-encontro',
-    serve: 'Devolve a vontade de transar e a energia bruta que você tinha aos 18 anos.',
-    benefits: ['Vontade de transar', 'Energia de touro', 'Libido no teto'],
+    timing: 'Manhã ou 1h antes do encontro',
+    serve: 'Tradicionalmente usado pra aumentar disposição, energia e presença masculina.',
+    benefits: ['Aumento de disposição', 'Energia bruta', 'Presença masculina'],
     ingredients: [
-      { name: 'Água gelada', qty: '150ml' },
+      { name: 'Água', qty: '1 copo' },
       { name: 'Suco de limão', qty: '1/2 limão' },
-      { name: 'Bicarbonato', qty: '1/2 colher de café' },
-      { name: 'Mel orgânico', qty: '1 colher de sopa' }
+      { name: 'Bicarbonato', qty: '1 colher de café rasa' },
+      { name: 'Mel', qty: '1 colher de chá' },
+      { name: 'Aveia fina', qty: '1 colher de sopa' }
     ],
     instructions: [
-      'Dissolva o mel no limão primeiro',
-      'Adicione a água gelada',
-      'Adicione o bicarbonato e beba enquanto borbulha'
+      'Misture o limão na água',
+      'Adicione o bicarbonato e aguarde a reação',
+      'Adicione a aveia fina e o mel, mexa vigorosamente',
+      'Beba imediatamente'
     ],
-    tips: ['Funciona como um pré-treino para o sexo']
+    tips: ['A aveia fornece energia de liberação lenta']
   },
   'pre-encontro': {
     id: 'pre-encontro',
@@ -114,7 +117,7 @@ export const TONICS: Record<string, Tonic> = {
     ingredients: [
       { name: 'Água com gás', qty: '100ml' },
       { name: 'Suco de limão', qty: '1/2 limão' },
-      { name: 'Bicarbonato', qty: '1 pitada' }
+      { name: 'Bicarbonato', qty: '1 colher de café rasa' }
     ],
     instructions: [
       'Misture o limão na água com gás',
@@ -133,7 +136,7 @@ export const TONICS: Record<string, Tonic> = {
     benefits: ['Zero azia', 'Digestão leve', 'Pau firme'],
     ingredients: [
       { name: 'Água morna', qty: '300ml' },
-      { name: 'Bicarbonato', qty: '1/2 colher de café' },
+      { name: 'Bicarbonato', qty: '1 colher de café rasa' },
       { name: 'Mel', qty: '2 colheres de chá' }
     ],
     instructions: [
