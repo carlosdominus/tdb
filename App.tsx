@@ -19,7 +19,6 @@ import { ExclusivePackage2View } from './views/ExclusivePackage2View.tsx';
 import { WelcomeModal } from './components/WelcomeModal.tsx';
 import { Logo } from './components/Logo.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
-import { AIChat } from './components/AIChat.tsx';
 import { Beaker, TrendingUp, Gift, ChevronLeft, Menu, Home } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -213,9 +212,6 @@ const App: React.FC = () => {
         currentView={currentView}
       />
 
-      {/* AIChat Widget */}
-      <AIChat />
-
       {/* Welcome Modal Disparado na primeira vez */}
       {!state.hasSeenWelcomeVideo && state.user?.onboardingCompleted && (
         <WelcomeModal 
@@ -250,25 +246,21 @@ const App: React.FC = () => {
         {renderView()}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 glass md:hidden z-50 grid grid-cols-5 items-center py-4 px-2 border-t border-gray-100">
-        <NavButton active={currentView === View.DASHBOARD} icon={<Home size={24} />} label="Home" onClick={() => setCurrentView(View.DASHBOARD)} />
-        <NavButton active={currentView === View.CATALOG} icon={<Beaker size={24} />} label="Tônicos" onClick={() => setCurrentView(View.CATALOG)} />
-        <NavButton active={currentView === View.TRACKER} icon={<TrendingUp size={24} />} label="Stats" onClick={() => setCurrentView(View.TRACKER)} />
-        <NavButton active={currentView === View.BONUSES} icon={<Gift size={24} />} label="Bônus" onClick={() => setCurrentView(View.BONUSES)} />
-        {/* Dedicated empty space for the floating support button */}
-        <div className="flex flex-col items-center justify-center opacity-0 pointer-events-none select-none">
-          <div className="w-6 h-6" />
-          <span className="text-[9px] font-black uppercase tracking-widest">Suporte</span>
-        </div>
+      {/* Menu mobile "espremido" para a esquerda com pr-20 para não sobrepor o chat flutuante */}
+      <nav className="fixed bottom-0 left-0 right-0 glass md:hidden z-50 flex items-center py-4 px-4 border-t border-gray-100 justify-start gap-2 pr-24">
+        <NavButton active={currentView === View.DASHBOARD} icon={<Home size={22} />} label="Home" onClick={() => setCurrentView(View.DASHBOARD)} />
+        <NavButton active={currentView === View.CATALOG} icon={<Beaker size={22} />} label="Tônicos" onClick={() => setCurrentView(View.CATALOG)} />
+        <NavButton active={currentView === View.TRACKER} icon={<TrendingUp size={22} />} label="Stats" onClick={() => setCurrentView(View.TRACKER)} />
+        <NavButton active={currentView === View.BONUSES} icon={<Gift size={22} />} label="Bônus" onClick={() => setCurrentView(View.BONUSES)} />
       </nav>
     </div>
   );
 };
 
 const NavButton: React.FC<{ active: boolean; icon: React.ReactNode; label: string; onClick: () => void }> = ({ active, icon, label, onClick }) => (
-  <button onClick={onClick} className={`flex flex-col items-center gap-1 flex-1 transition-all ${active ? 'text-[#1B4D3E] scale-110' : 'text-[#86868B]'}`}>
+  <button onClick={onClick} className={`flex flex-col items-center gap-1 px-3 transition-all ${active ? 'text-[#1B4D3E] scale-105' : 'text-[#86868B]'}`}>
     {icon}
-    <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
+    <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
   </button>
 );
 

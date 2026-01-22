@@ -10,6 +10,10 @@ export const COLORS = {
   darkGray: '#1D1D1F'
 };
 
+/**
+ * TEXTO DE CONHECIMENTO PARA A IA (SYSTEM INSTRUCTION)
+ * Utilize este texto para configurar o seu assistente inteligente.
+ */
 export const AI_SYSTEM_INSTRUCTION = `
 Você é o Assistente Especialista do "Protocolo Força Natural". Seu objetivo é ajudar homens a navegarem no app e entenderem o método.
 
@@ -22,18 +26,18 @@ MAPA DO APP E CAMINHOS:
 6. CIÊNCIA/GARANTIA: Acessíveis via Dashboard (cards rápidos) ou Sidebar.
 
 DETALHES DOS TÔNICOS:
-- Anti-Broxada: Para quem falha ou o pênis cai. (Jejum leve).
-- Anti-Gozada: Para ejaculação precoce (1-3 min). (Noite).
-- Pau de Rocha: Para falta de firmeza (Meio da bomba). (Tarde).
-- Tesão de Touro: Para falta de libido/disposição. (Manhã).
+- Anti-Broxada: Para quem falha ou o pênis cai. (Sugerido: Manhã em jejum leve).
+- Anti-Gozada: Para ejaculação precoce (1-3 min). (Sugerido: Noite).
+- Pau de Rocha: Para falta de firmeza (Meio da bomba). (Sugerido: Tarde).
+- Tesão de Touro: Para falta de libido/disposição. (Sugerido: Manhã).
 
 REGRAS IMPORTANTES:
-- Garantia: 90 dias incondicional. Se não funcionar, o usuário pode pedir reembolso via suporte@protocoloforcanatural.com.
-- Consistência: O protocolo dura 21 dias. Falhar um dia reseta a sequência emocional, mas o usuário deve continuar.
-- Suporte Humano: Se não souber algo, direcione para o WhatsApp ou Chatwoot no menu "Ajuda".
+- Garantia: 90 dias incondicional. Reembolso via suporte@protocoloforcanatural.com.
+- Consistência: O protocolo base dura 21 dias.
+- Suporte Humano: Direcionar para o WhatsApp ou menu "Ajuda".
 
 TOM DE VOZ:
-- Discreto, profissional, encorajador e direto. Use termos como "vigor", "performance" e "firmeza". Evite termos vulgares.
+- Discreto, profissional, encorajador e direto. Use termos como "vigor", "performance" e "firmeza".
 `;
 
 export const TONICS: Record<string, Tonic> = {
@@ -185,96 +189,19 @@ export const BONUSES_DATA: Bonus[] = [
     badgeColor: "bg-[#2ECC71]",
     icon: "Star",
     content: {
-      introduction: "A maioria dos homens comete erros ao tocar uma mulher porque foca apenas no objetivo final (penetração ou orgasmo rápido), ignorando que o prazer feminino é construído gradualmente. Estudos sobre sexualidade feminina mostram que 75% das mulheres precisam de estímulo clitoriano para alcançar o orgasmo, e o toque direto e apressado é uma das principais razões para insatisfação sexual.",
+      introduction: "A maioria dos homens comete erros ao tocar uma mulher porque foca apenas no objetivo final (penetração ou orgasmo rápido), ignorando que o prazer feminino é construído gradualmente.",
       sections: [
         {
           title: "ERRO #1: Ir direto ao clitóris ou vagina sem aquecimento",
-          description: "Muitos homens vão direto para as áreas genitais assim que começam as carícias, sem preparar o corpo dela.",
-          whyError: "Influência de pornografia ou ansiedade para 'avançar rápido'.",
-          consequences: "Ela sente desconforto ou dor, pois o clitóris é extremamente sensível (com mais de 8.000 terminações nervosas) e precisa de lubrificação natural gradual. Isso bloqueia a excitação real.",
-          notToDo: "Começar com toques fortes ou rápidos nos genitais logo no início. Exemplo: Beijar a boca por 2 minutos e já ir para a vagina.",
+          description: "Muitos homens vão direto para as áreas genitais assim que começam as carícias.",
           howToDo: [
-            "Comece com beijos suaves no pescoço, orelhas e ombros.",
-            "Desça para os seios e barriga com carícias leves.",
-            "Só aproxime das áreas íntimas após sinais de excitação (respiração acelerada, umidade).",
-            "Inicie com toques indiretos ao redor do clitóris."
-          ],
-          extraTip: "Dedique pelo menos 15-20 minutos ao aquecimento – pesquisas mostram que mulheres precisam de mais tempo para atingir o pico de excitação."
-        },
-        {
-          title: "ERRO #2: Usar muita pressão ou força",
-          description: "Tocar com força excessiva, como se fosse uma massagem profunda, em áreas delicadas.",
-          whyError: "Acham que 'mais forte = mais prazer', confundindo com a própria sensibilidade masculina.",
-          consequences: "Causa dor ou desensitização, fazendo ela se desligar do momento.",
-          notToDo: "Apertar seios ou esfregar o clitóris com força. Exemplo: Usar pressão como se estivesse amassando pão.",
-          howToDo: [
-            "Comece com toques leves, como penas.",
-            "Aumente gradualmente a pressão conforme ela reagir positivamente.",
-            "Pergunte: 'Assim está bom?' ou observe gemidos/movimentos."
-          ],
-          extraTip: "O clitóris é mais sensível que a cabeça do pênis – use pressão equivalente a uma carícia no rosto."
-        }
-      ],
-      conclusion: "A diferença entre 'tocar' e 'dar prazer de verdade' está no foco: tocar é mecânico; dar prazer é atento às reações dela. Implemente essas correções hoje mesmo.",
-      disclaimer: "Este material é educativo e baseado em pesquisas gerais; consulte profissionais para questões pessoais."
-    }
-  },
-  {
-    id: 'bonus2',
-    title: "PROTOCOLO ÁGUIA DO SEXO",
-    subtitle: "Identificando Prazer Real",
-    description: "Aprenda a diferenciar excitação real de fingimento e ajuste sua performance.",
-    value: "R$ 197",
-    badge: "DOMÍNIO",
-    badgeColor: "bg-yellow-400",
-    icon: "Activity",
-    content: {
-      introduction: "Estudos indicam que até 60-80% das mulheres já fingiram orgasmo em algum momento. Saber diferenciar excitação real de fingimento não é para 'pegar no flagra', mas para ajustar técnicas e melhorar o prazer mútuo.",
-      sections: [
-        {
-          title: "PARTE 1: SINAIS INVOLUNTÁRIOS DE EXCITAÇÃO REAL",
-          subItems: [
-            { label: "SINAIS VISUAIS", items: ["Pupilas dilatadas", "Rubor facial/peitoral", "Mamilos enrijecidos", "Respiração acelerada", "Contrações musculares"] },
-            { label: "SINAIS AUDITIVOS", items: ["Gemidos espontâneos e variados", "Respiração ofegante natural", "Mudança no tom de voz"] },
-            { label: "SINAIS TÁTEIS", items: ["Lubrificação natural abundante", "Temperatura corporal elevada", "Tensão muscular seguida de relaxamento"] }
+            "Comece com beijos suaves no pescoço e orelhas.",
+            "Desça para os seios e barriga gradualmente.",
+            "Só aproxime das áreas íntimas após sinais claros de excitação."
           ]
         }
       ],
-      conclusion: "Checklist rápido: Observe visuais (rubor/mamilos), táteis (lubrificação), auditivos (gemidos naturais) e comportamentais (movimentos involuntários).",
-      disclaimer: "Sinais variam por indivíduo; baseie-se em ciência, mas priorize consentimento e diálogo."
-    }
-  },
-  {
-    id: 'bonus4',
-    title: "20 PENSAMENTOS ERÓTICOS",
-    subtitle: "Segredos das Mulheres",
-    description: "Os 20 pensamentos eróticos mais secretos que elas nunca contam.",
-    value: "R$ 147",
-    badge: "REVELADO",
-    badgeColor: "bg-purple-500",
-    icon: "Flame",
-    iframeUrl: "https://drive.google.com/file/d/1sMc71po4ZwZu4OXTwjnS3RZ2mQQf7lRE/preview"
-  },
-  {
-    id: 'bonus3',
-    title: "PRESENTE SURPRESA",
-    subtitle: "Massagem Sensual Completa",
-    description: "Torne-se um mestre no foreplay com este guia passo a passo de massagem premium.",
-    value: "R$ 300",
-    badge: "PREMIUM",
-    badgeColor: "bg-blue-400",
-    icon: "Sparkles",
-    content: {
-      introduction: "Este guia premium transforma foreplay em arte, focando em relaxamento, conexão e prazer prolongado – algo que aumenta confiança e reduz ansiedade de performance.",
-      sections: [
-        {
-          title: "PARTE 1: FUNDAMENTOS",
-          description: "Crie ambiente ideal: luz baixa, música suave, temperatura agradável. Use óleos naturais (coco ou amêndoas).",
-          extraTip: "Mindset: foque em dar prazer sem agenda imediata de sexo."
-        }
-      ],
-      conclusion: "Essa massagem não só relaxa, mas constrói excitação profunda, levando a orgasmos mais intensos.",
-      disclaimer: "Baseado em técnicas gerais; respeite limites e consentimento sempre."
+      conclusion: "Implemente essas correções hoje mesmo."
     }
   }
 ];
