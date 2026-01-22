@@ -19,6 +19,7 @@ import { ExclusivePackage2View } from './views/ExclusivePackage2View.tsx';
 import { WelcomeModal } from './components/WelcomeModal.tsx';
 import { Logo } from './components/Logo.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
+import { AIChat } from './components/AIChat.tsx';
 import { Beaker, TrendingUp, Gift, ChevronLeft, Menu, Home } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -211,6 +212,9 @@ const App: React.FC = () => {
         onLogout={handleLogout}
         currentView={currentView}
       />
+
+      {/* AIChat Widget */}
+      <AIChat />
 
       {/* Welcome Modal Disparado na primeira vez */}
       {!state.hasSeenWelcomeVideo && state.user?.onboardingCompleted && (
