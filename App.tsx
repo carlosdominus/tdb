@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, AppState, UserProfile, Tonic, ProblemType } from './types.ts';
 import { MOCK_USER, INITIAL_MODULES, TONICS, PROBLEM_TO_TONIC } from './constants.tsx';
@@ -19,7 +18,7 @@ import { ExclusivePackage2View } from './views/ExclusivePackage2View.tsx';
 import { WelcomeModal } from './components/WelcomeModal.tsx';
 import { Logo } from './components/Logo.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
-import { Beaker, TrendingUp, Gift, ChevronLeft, Menu, Home } from 'lucide-react';
+import { Beaker, TrendingUp, Gift, ChevronLeft, Menu, Home, MessageCircle } from 'lucide-react';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.LOGIN);
@@ -33,14 +32,14 @@ const App: React.FC = () => {
     hasSeenWelcomeVideo: false
   });
 
-  // Ensure scroll is at the top when switching views or tonics
+  const WHATSAPP_URL = 'https://wa.me/558394186965';
+
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.body.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [currentView, activeTonicId]);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('protocolo_v2_state');
     if (saved) {
@@ -56,7 +55,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Save to localStorage whenever state changes
   useEffect(() => {
     localStorage.setItem('protocolo_v2_state', JSON.stringify(state));
   }, [state]);
@@ -212,6 +210,33 @@ const App: React.FC = () => {
         currentView={currentView}
       />
 
+      {/* Floating Sticky Help Nudge - Left Side Below Header */}
+      <div className="fixed top-[76px] left-4 z-40 animate-float hidden sm:block">
+        <button 
+          onClick={() => window.open(WHATSAPP_URL, '_blank')}
+          className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-green-100 group transition-all hover:scale-105 active:scale-95"
+        >
+          <div className="w-8 h-8 gradient-primary text-white rounded-full flex items-center justify-center shadow-sm">
+            <MessageCircle size={16} />
+          </div>
+          <div className="flex flex-col items-start leading-none">
+            <span className="text-[10px] font-black text-[#1B4D3E] uppercase tracking-tighter">Ficou com dúvidas?</span>
+            <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-widest">Chamar no Whats</span>
+          </div>
+        </button>
+      </div>
+
+      {/* Mobile version of the nudge */}
+      <div className="fixed top-[74px] left-3 z-40 animate-float sm:hidden">
+        <button 
+          onClick={() => window.open(WHATSAPP_URL, '_blank')}
+          className="flex items-center gap-1.5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md border border-green-100 active:scale-95"
+        >
+          <MessageCircle size={14} className="text-[#2ECC71]" />
+          <span className="text-[9px] font-black text-[#1B4D3E] uppercase tracking-tighter">Dúvidas?</span>
+        </button>
+      </div>
+
       {/* Welcome Modal Disparado na primeira vez */}
       {!state.hasSeenWelcomeVideo && state.user?.onboardingCompleted && (
         <WelcomeModal 
@@ -246,7 +271,6 @@ const App: React.FC = () => {
         {renderView()}
       </main>
 
-      {/* Menu mobile "espremido" para a esquerda com pr-20 para não sobrepor o chat flutuante */}
       <nav className="fixed bottom-0 left-0 right-0 glass md:hidden z-50 flex items-center py-4 px-4 border-t border-gray-100 justify-start gap-2 pr-24">
         <NavButton active={currentView === View.DASHBOARD} icon={<Home size={22} />} label="Home" onClick={() => setCurrentView(View.DASHBOARD)} />
         <NavButton active={currentView === View.CATALOG} icon={<Beaker size={22} />} label="Tônicos" onClick={() => setCurrentView(View.CATALOG)} />

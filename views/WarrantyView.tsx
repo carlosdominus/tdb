@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { GlassCard } from '../components/GlassCard';
 import { Button } from '../components/Button';
@@ -31,7 +30,7 @@ export const WarrantyView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <h3 className="text-xl font-bold text-[#1B4D3E]">Risco Zero Absoluto</h3>
          </div>
          <p className="text-[#86868B] leading-relaxed mb-6">
-            Você está 100% protegido. Se por qualquer motivo você achar que o Protocolo Força Natural não é para você, basta enviar um e-mail. Sem perguntas, sem burocracia, sem ressentimentos.
+            Você está 100% protegido. Se por qualquer motivo você achar que o Protocolo Força Natural não é para você, basta entrar em contato. Sem perguntas, sem burocracia.
          </p>
 
          <div className="space-y-8 relative">
@@ -99,7 +98,7 @@ export const WarrantyView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
             <div className="space-y-4">
               <button 
-                onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}
+                onClick={() => window.open('https://wa.me/558394186965', '_blank')}
                 className="w-full flex items-center gap-4 p-5 rounded-2xl bg-green-50 border border-green-100 hover:bg-green-100 transition-all group"
               >
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#2ECC71] shadow-sm">
@@ -112,7 +111,7 @@ export const WarrantyView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               </button>
 
               <button 
-                onClick={() => window.open('mailto:contato@suportmedia.com', '_blank')}
+                onClick={() => window.location.href = 'mailto:contato@suportmedia.com'}
                 className="w-full flex items-center gap-4 p-5 rounded-2xl bg-blue-50 border border-blue-100 hover:bg-blue-100 transition-all group"
               >
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-500 shadow-sm">

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -13,7 +12,6 @@
         background-color: #F5F5F7;
         color: #1D1D1F;
         -webkit-font-smoothing: antialiased;
-        /* Evita bounce de scroll indesejado em dispositivos móveis */
         overscroll-behavior-y: none;
       }
       h1, h2, h3, .font-poppins {
@@ -41,6 +39,14 @@
       .ease-apple {
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+        100% { transform: translateY(0px); }
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
       @keyframes spin-slow {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
@@ -56,8 +62,6 @@
       .animate-pulse-glow {
         animation: pulse-glow 2s infinite;
       }
-
-      /* Fix para inputs no iOS não darem zoom automático */
       input, select, textarea {
         font-size: 16px !important;
       }
