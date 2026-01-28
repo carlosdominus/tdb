@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, AppState, UserProfile, Tonic, ProblemType } from './types.ts';
 import { MOCK_USER, INITIAL_MODULES, TONICS, PROBLEM_TO_TONIC } from './constants.tsx';
@@ -210,30 +211,19 @@ const App: React.FC = () => {
         currentView={currentView}
       />
 
-      {/* Floating Sticky Help Nudge - Left Side Below Header */}
-      <div className="fixed top-[76px] left-4 z-40 animate-float hidden sm:block">
+      {/* Floating Sticky Help Nudge - Unified for Desktop and Mobile */}
+      <div className="fixed top-[110px] left-4 z-40 animate-float">
         <button 
           onClick={() => window.open(WHATSAPP_URL, '_blank')}
-          className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-green-100 group transition-all hover:scale-105 active:scale-95"
+          className="flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-green-100 group transition-all hover:scale-105 active:scale-95"
         >
-          <div className="w-8 h-8 gradient-primary text-white rounded-full flex items-center justify-center shadow-sm">
+          <div className="w-8 h-8 gradient-primary text-white rounded-full flex items-center justify-center shadow-md animate-pulse">
             <MessageCircle size={16} />
           </div>
-          <div className="flex flex-col items-start leading-none">
+          <div className="flex flex-col items-start leading-none pr-1">
             <span className="text-[10px] font-black text-[#1B4D3E] uppercase tracking-tighter">Ficou com dúvidas?</span>
             <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-widest">Chamar no Whats</span>
           </div>
-        </button>
-      </div>
-
-      {/* Mobile version of the nudge */}
-      <div className="fixed top-[74px] left-3 z-40 animate-float sm:hidden">
-        <button 
-          onClick={() => window.open(WHATSAPP_URL, '_blank')}
-          className="flex items-center gap-1.5 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md border border-green-100 active:scale-95"
-        >
-          <MessageCircle size={14} className="text-[#2ECC71]" />
-          <span className="text-[9px] font-black text-[#1B4D3E] uppercase tracking-tighter">Dúvidas?</span>
         </button>
       </div>
 
