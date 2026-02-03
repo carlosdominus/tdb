@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { AppState, View } from '../types';
+import { AppState, View, DailyChecklist } from '../types';
 import { GlassCard } from '../components/GlassCard';
 import { ChevronLeft, CheckCircle2, Circle, Clock, Target, Calendar } from 'lucide-react';
 
@@ -34,7 +34,8 @@ export const ChecklistView: React.FC<ChecklistViewProps> = ({ state, onBack, onT
     };
   });
 
-  const completedCount = Object.values(state.checklist).filter(c => c.mainTonic).length;
+  // Fix: Added explicit type cast for Object.values to avoid 'unknown' type error
+  const completedCount = (Object.values(state.checklist) as DailyChecklist[]).filter(c => c.mainTonic).length;
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 pb-12">

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { AppState, View, ProblemType } from '../types.ts';
+import { AppState, View, ProblemType, DailyChecklist } from '../types.ts';
 import { TONICS, PROBLEM_TO_TONIC } from '../constants.tsx';
 import { GlassCard } from '../components/GlassCard.tsx';
 import { Button } from '../components/Button.tsx';
@@ -51,7 +51,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ state, onNavigate,
             <div className="w-full h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
               <div 
                 className="h-full gradient-primary rounded-full transition-all duration-1000" 
-                style={{ width: `${Math.min(100, (Object.values(state.checklist).filter(c => c.mainTonic).length / 21) * 100)}%` }}
+                // Fix: Added explicit type cast for Object.values to avoid 'unknown' type error
+                style={{ width: `${Math.min(100, ((Object.values(state.checklist) as DailyChecklist[]).filter(c => c.mainTonic).length / 21) * 100)}%` }}
               ></div>
             </div>
           </div>

@@ -46,19 +46,37 @@ const HASH_TO_VIEW: Record<string, View> = Object.entries(VIEW_TO_HASH).reduce(
   {}
 );
 
-const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<View>(View.LOGIN);
-  const [activeTonicId, setActiveTonicId] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [state, setState] = useState<AppState>({
+// Função auxiliar para carregar o estado inicial de forma síncrona
+const loadPersistedState = (): AppState => {
+  const saved = localStorage.getItem('protocolo_premium_state');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      // Garantir que módulos iniciais existam se o estado salvo for antigo
+      return {
+        ...parsed,
+        modules: parsed.modules || INITIAL_MODULES
+      };
+    } catch (e) {
+      console.error("Erro ao carregar dados salvos", e);
+    }
+  }
+  return {
     user: null,
     modules: INITIAL_MODULES,
     checklist: {},
     isLoggedIn: false,
     hasSeenWelcomeVideo: false
-  });
+  };
+};
 
-  // Helper to change hash and trigger routing
+const App: React.FC = () => {
+  const [state, setState] = useState<AppState>(loadPersistedState());
+  const [currentView, setCurrentView] = useState<View>(View.LOGIN);
+  const [activeTonicId, setActiveTonicId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Navegação baseada em Hash
   const navigateTo = (view: View, id?: string) => {
     let hash = VIEW_TO_HASH[view];
     if (view === View.TONIC_DETAIL && id) {
@@ -67,54 +85,54 @@ const App: React.FC = () => {
     window.location.hash = hash;
   };
 
+  // Gerenciador de Roteamento Centralizado
   useEffect(() => {
     const handleHashChange = () => {
       const fullHash = window.location.hash.replace('#', '');
       const [hashBase, id] = fullHash.split('/');
-      const view = HASH_TO_VIEW[hashBase];
+      
+      // Decidir qual a view correta baseada no estado de login e na URL desejada
+      let targetView = HASH_TO_VIEW[hashBase];
 
-      if (view) {
-        const isAuthView = view !== View.LOGIN && view !== View.ONBOARDING;
-        const saved = localStorage.getItem('protocolo_premium_state');
-        const isLoggedIn = saved ? JSON.parse(saved).isLoggedIn : state.isLoggedIn;
-
-        if (isAuthView && !isLoggedIn) {
+      if (!state.isLoggedIn) {
+        // Se não logado, só pode ver Login
+        if (targetView !== View.LOGIN) {
           window.location.hash = 'login';
           return;
         }
-
-        setCurrentView(view);
-        if (id) setActiveTonicId(id);
-      } else if (!state.isLoggedIn && !localStorage.getItem('protocolo_premium_state')) {
-        window.location.hash = 'login';
+      } else if (!state.user?.onboardingCompleted) {
+        // Se logado mas sem onboarding, forçar onboarding
+        if (targetView !== View.ONBOARDING) {
+          window.location.hash = 'onboarding';
+          return;
+        }
       } else {
-        window.location.hash = 'dashboard';
+        // Se logado e com onboarding, não pode ver Login ou Onboarding
+        if (!targetView || targetView === View.LOGIN || targetView === View.ONBOARDING) {
+          window.location.hash = 'dashboard';
+          return;
+        }
       }
+
+      setCurrentView(targetView || (state.isLoggedIn ? View.DASHBOARD : View.LOGIN));
+      if (id) setActiveTonicId(id);
     };
 
     window.addEventListener('hashchange', handleHashChange);
+    // Disparar uma vez manualmente para validar a rota inicial
     handleHashChange();
 
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [state.isLoggedIn]);
+  }, [state.isLoggedIn, state.user?.onboardingCompleted]);
+
+  // Persistência automática
+  useEffect(() => {
+    localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
+  }, [state]);
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [currentView, activeTonicId]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('protocolo_premium_state');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.isLoggedIn) {
-        setState(parsed);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
-  }, [state]);
 
   const handleLogin = async (name: string, email: string) => {
     const newUser = { 
@@ -122,20 +140,17 @@ const App: React.FC = () => {
       name, 
       email,
       createdAt: new Date().toISOString(),
-      loginCount: 1
+      loginCount: 1,
+      onboardingCompleted: false
     };
     
-    // Webhook 1: Clientes (Login)
+    // Webhook 1: Clientes (Sincronização de Login)
     try {
       fetch('https://nen.auto-jornada.space/webhook/clientes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: email, 
-          qtd_login: 1, 
-          nome: name 
-        }),
-      }).catch(err => console.error("Webhook Error:", err));
+        body: JSON.stringify({ email, qtd_login: 1, nome: name }),
+      }).catch(e => console.error("Webhook 1 failed", e));
     } catch (e) {}
 
     setState(prev => ({ ...prev, isLoggedIn: true, user: newUser }));
@@ -143,7 +158,7 @@ const App: React.FC = () => {
   };
 
   const handleOnboardingComplete = async (profile: UserProfile) => {
-    // Webhook 2: Clientes Infos (Onboarding Data)
+    // Webhook 2: Clientes Infos (Todos os dados do formulário)
     try {
       fetch('https://nen.auto-jornada.space/webhook/clientes-infos', {
         method: 'POST',
@@ -154,7 +169,7 @@ const App: React.FC = () => {
           nome: state.user?.name,
           date: new Date().toISOString()
         }),
-      }).catch(err => console.error("Webhook Error:", err));
+      }).catch(e => console.error("Webhook 2 failed", e));
     } catch (e) {}
 
     setState(prev => ({
@@ -165,9 +180,9 @@ const App: React.FC = () => {
   };
 
   const handleLogout = () => {
-    setState({ user: null, modules: INITIAL_MODULES, checklist: {}, isLoggedIn: false, hasSeenWelcomeVideo: false });
     localStorage.removeItem('protocolo_premium_state');
-    navigateTo(View.LOGIN);
+    setState({ user: null, modules: INITIAL_MODULES, checklist: {}, isLoggedIn: false, hasSeenWelcomeVideo: false });
+    window.location.hash = 'login';
   };
 
   const handleTonicToggle = (date: string, type: 'main' | 'complementary', tonicId?: string) => {
@@ -218,8 +233,10 @@ const App: React.FC = () => {
     }
   };
 
-  if (currentView === View.LOGIN) return <LoginView onLogin={handleLogin} />;
-  if (currentView === View.ONBOARDING) return <OnboardingView onComplete={handleOnboardingComplete} />;
+  // Se o estado inicial já indicar login, renderizamos o layout com sidebar
+  const isAuthPage = currentView === View.LOGIN || currentView === View.ONBOARDING;
+
+  if (isAuthPage) return renderView();
 
   return (
     <div className="min-h-screen pb-24 md:pb-0 bg-[#F8F9FA]">
@@ -242,7 +259,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div onClick={() => navigateTo(View.PROFILE)} className="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-black text-sm uppercase shadow-lg cursor-pointer">
-          {state.user?.name.charAt(0)}
+          {state.user?.name?.charAt(0) || 'U'}
         </div>
       </header>
 
