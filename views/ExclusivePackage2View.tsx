@@ -9,28 +9,28 @@ interface ExclusivePackage2ViewProps {
 
 export const ExclusivePackage2View: React.FC<ExclusivePackage2ViewProps> = ({ onBack }) => {
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 pb-12 max-w-2xl mx-auto">
+    <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500 pb-12 max-w-2xl mx-auto">
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-2 text-[#86868B] hover:text-[#1B4D3E] transition-colors font-black text-[11px] uppercase tracking-[0.2em]">
+        <button onClick={onBack} className="flex items-center gap-2 text-[#86868B] hover:text-black transition-colors font-black text-[11px] uppercase tracking-[0.2em]">
           <ChevronLeft size={20} /> Voltar
         </button>
-        <span className="bg-[#1B4D3E] text-white px-4 py-1.5 rounded-xl text-[10px] font-black shadow-md uppercase tracking-widest flex items-center gap-2">
-          <BookOpen size={12} className="text-yellow-400" /> GUIAS DIGITAIS
+        <span className="bg-black text-white px-4 py-1.5 rounded-xl text-[10px] font-black shadow-md uppercase tracking-widest flex items-center gap-2">
+          <BookOpen size={12} className="text-[#E63946]" /> BIBLIOTECA VIP
         </span>
       </div>
 
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-[#1B4D3E] uppercase tracking-tighter mb-2">Pacote Exclusivo n°2</h1>
-        <p className="text-[#86868B] font-medium">Acesse sua biblioteca de manuais estratégicos abaixo.</p>
+        <h1 className="text-4xl font-black text-black uppercase tracking-tighter mb-2">125 Posições Sexuais</h1>
+        <p className="text-[#86868B] font-black text-[10px] uppercase tracking-[0.3em]">Manuais e Guias de Domínio</p>
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-12">
         <div className="space-y-4">
-          <div className="flex items-center gap-3 ml-2">
-            <div className="w-1.5 h-6 bg-[#2ECC71] rounded-full"></div>
-            <h2 className="text-lg font-bold text-[#1B4D3E] uppercase tracking-tight">Guia Estratégico 01</h2>
+          <div className="flex items-center gap-4 ml-2">
+            <div className="w-2 h-8 gradient-primary rounded-full"></div>
+            <h2 className="text-xl font-black text-black uppercase tracking-tight">Volume 01: Fundamentos</h2>
           </div>
-          <GlassCard className="p-0 overflow-hidden shadow-xl border-none bg-white rounded-[32px]">
+          <GlassCard className="p-0 overflow-hidden shadow-2xl border-none bg-white rounded-[40px]">
             <div style={{ position: 'relative', width: '100%', height: 0, paddingBottom: '140%' }}>
               <iframe 
                 src="https://drive.google.com/file/d/1rYLln70gHfTpU_57oU5baKIz0nqABclY/preview" 
@@ -42,11 +42,11 @@ export const ExclusivePackage2View: React.FC<ExclusivePackage2ViewProps> = ({ on
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center gap-3 ml-2">
-            <div className="w-1.5 h-6 bg-[#2ECC71] rounded-full"></div>
-            <h2 className="text-lg font-bold text-[#1B4D3E] uppercase tracking-tight">Manual de Performance 02</h2>
+          <div className="flex items-center gap-4 ml-2">
+            <div className="w-2 h-8 gradient-primary rounded-full"></div>
+            <h2 className="text-xl font-black text-black uppercase tracking-tight">Volume 02: Performance</h2>
           </div>
-          <GlassCard className="p-0 overflow-hidden shadow-xl border-none bg-white rounded-[32px]">
+          <GlassCard className="p-0 overflow-hidden shadow-2xl border-none bg-white rounded-[40px]">
             <div style={{ position: 'relative', width: '100%', height: 0, paddingBottom: '140%' }}>
               <iframe 
                 src="https://drive.google.com/file/d/1i6WheI8SUpHrRee61MrwqpJnyOdYh2_d/preview" 
@@ -58,21 +58,15 @@ export const ExclusivePackage2View: React.FC<ExclusivePackage2ViewProps> = ({ on
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 mt-8">
-        <div className="p-6 bg-[#1B4D3E]/5 rounded-3xl border border-[#1B4D3E]/10 flex items-center gap-4">
-          <div className="w-12 h-12 bg-white text-[#1B4D3E] rounded-2xl flex items-center justify-center shadow-sm">
-            <Download size={24} />
-          </div>
-          <div>
-            <h4 className="font-bold text-[#1B4D3E]">Disponível Offline</h4>
-            <p className="text-xs text-[#86868B]">Estes documentos são carregados automaticamente para acesso rápido.</p>
-          </div>
+      <div className="p-8 bg-black text-white rounded-[40px] flex items-center gap-6 shadow-2xl">
+        <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white shadow-sm border border-white/10">
+          <Download size={28} />
+        </div>
+        <div>
+          <h4 className="font-black uppercase tracking-tight">Leitura Recomendada</h4>
+          <p className="text-xs text-gray-400 font-bold">Estes guias complementam o seu tratamento bioquímico com técnica pura.</p>
         </div>
       </div>
-      
-      <p className="text-center text-[10px] text-[#86868B] font-black uppercase tracking-widest opacity-60 px-10">
-        Não consegue visualizar? Tente atualizar a página ou verificar sua conexão.
-      </p>
     </div>
   );
 };

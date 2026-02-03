@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from "@google/genai";
 import { MessageSquare, X, Send, User, Bot, Loader2, Sparkles } from 'lucide-react';
 import { AI_SYSTEM_INSTRUCTION } from '../constants';
 import { GlassCard } from './GlassCard';
@@ -29,6 +29,7 @@ export const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Re-initialize client to ensure freshest API key from environment
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
@@ -85,17 +86,17 @@ export const AIChat: React.FC = () => {
           <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50/50">
             {messages.length === 0 && (
               <div className="text-center py-10 px-6">
-                <div className="w-16 h-16 bg-[#1B4D3E]/10 text-[#1B4D3E] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#E63946]/10 text-[#E63946] rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Bot size={32} />
                 </div>
-                <h4 className="font-bold text-[#1B4D3E]">Olá! Como posso te ajudar?</h4>
-                <p className="text-xs text-[#86868B] mt-2 font-medium">Tire dúvidas sobre receitas, bônus ou onde encontrar algo no app.</p>
+                <h4 className="font-bold text-black">Olá! Como posso te ajudar?</h4>
+                <p className="text-xs text-[#86868B] mt-2 font-medium">Tire dúvidas sobre tônicos, bônus ou onde encontrar algo no app.</p>
               </div>
             )}
             
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${m.role === 'user' ? 'bg-[#1B4D3E] text-white' : 'bg-white shadow-sm border border-gray-100 text-[#1D1D1F]'}`}>
+                <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${m.role === 'user' ? 'bg-[#E63946] text-white shadow-lg' : 'bg-white shadow-sm border border-gray-100 text-[#1D1D1F]'}`}>
                   {m.text}
                 </div>
               </div>
@@ -103,7 +104,7 @@ export const AIChat: React.FC = () => {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-                  <Loader2 size={20} className="animate-spin text-[#1B4D3E]" />
+                  <Loader2 size={20} className="animate-spin text-[#E63946]" />
                 </div>
               </div>
             )}
@@ -119,7 +120,7 @@ export const AIChat: React.FC = () => {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSend()}
                 placeholder="Pergunte algo..."
-                className="w-full pl-6 pr-14 py-4 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none font-medium"
+                className="w-full pl-6 pr-14 py-4 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#E63946] transition-all outline-none font-medium"
               />
               <button
                 onClick={handleSend}

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View } from '../types';
-import { Home, HelpCircle, BookOpen, Gift, Beaker, Shield, User, X, LogOut, Zap } from 'lucide-react';
+import { Home, HelpCircle, Crown, Gift, Beaker, Shield, User, X, LogOut, Zap } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface SidebarProps {
@@ -14,27 +14,24 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, onLogout, currentView }) => {
   const menuItems = [
-    { id: View.DASHBOARD, label: 'Home', icon: <Home size={20} /> },
-    { id: View.TRACKER, label: 'MODO TURBO', icon: <Zap size={20} /> },
-    { id: View.HELP, label: 'Central de Ajuda', icon: <HelpCircle size={20} /> },
-    { id: View.BONUSES, label: 'Meus Bônus', icon: <Gift size={20} /> },
-    { id: View.SCIENCE, label: 'A Ciência', icon: <Beaker size={20} /> },
-    { id: View.WARRANTY, label: 'Garantia', icon: <Shield size={20} /> },
-    { id: View.PROFILE, label: 'Meu Perfil', icon: <User size={20} /> },
+    { id: View.DASHBOARD, label: 'HOME', icon: <Home size={20} /> },
+    { id: View.CATALOG, label: 'TÔNICOS', icon: <Beaker size={20} /> },
+    { id: View.PREMIUM, label: 'PREMIUM', icon: <Crown size={20} /> },
+    { id: View.TRACKER, label: 'TURBO', icon: <Zap size={20} /> },
+    { id: View.BONUSES, label: 'BÔNUS', icon: <Gift size={20} /> },
+    { id: View.WARRANTY, label: 'GARANTIA', icon: <Shield size={20} /> },
+    { id: View.HELP, label: 'SUPORTE', icon: <HelpCircle size={20} /> },
+    { id: View.PROFILE, label: 'PERFIL', icon: <User size={20} /> },
   ];
 
   return (
     <>
-      {/* Overlay */}
       <div 
         className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
-      
-      {/* Drawer */}
       <aside className={`fixed top-0 left-0 bottom-0 w-72 bg-white z-[70] shadow-2xl transition-transform duration-500 ease-apple ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex flex-col h-full">
-          {/* Header */}
           <div className="p-6 flex items-center justify-between border-b border-gray-100">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center text-white">
@@ -47,7 +44,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, o
             </button>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2 mt-4">
             {menuItems.map((item) => (
               <button
@@ -64,7 +60,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onNavigate, o
             ))}
           </nav>
 
-          {/* Footer */}
           <div className="p-6 border-t border-gray-100">
             <button 
               onClick={onLogout}

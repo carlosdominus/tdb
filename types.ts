@@ -12,6 +12,7 @@ export interface User {
   name: string;
   email: string;
   createdAt: string;
+  loginCount: number;
   currentDay: number;
   streak: number;
   completionRate: number;
@@ -28,7 +29,7 @@ export interface Tonic {
   id: string;
   name: string;
   icon: string;
-  type: 'main' | 'complementary';
+  type: 'main' | 'complementary' | 'detox';
   timing: string;
   serve: string;
   benefits: string[];
@@ -103,18 +104,20 @@ export interface AppState {
 }
 
 export enum View {
-  LOGIN = 'LOGIN',
-  ONBOARDING = 'ONBOARDING',
   DASHBOARD = 'DASHBOARD',
-  MODULE = 'MODULE',
-  TONIC_DETAIL = 'TONIC_DETAIL',
   CATALOG = 'CATALOG',
+  PREMIUM = 'PREMIUM',
   TRACKER = 'TRACKER',
   BONUSES = 'BONUSES',
-  PROFILE = 'PROFILE',
   WARRANTY = 'WARRANTY',
-  SCIENCE = 'SCIENCE',
   HELP = 'HELP',
+  PROFILE = 'PROFILE',
+  MODULE = 'MODULE',
+  TONIC_DETAIL = 'TONIC_DETAIL',
   EXCLUSIVE_PACKAGE = 'EXCLUSIVE_PACKAGE',
-  EXCLUSIVE_PACKAGE_2 = 'EXCLUSIVE_PACKAGE_2'
+  EXCLUSIVE_PACKAGE_2 = 'EXCLUSIVE_PACKAGE_2',
+  LOGIN = 'LOGIN',
+  ONBOARDING = 'ONBOARDING',
+  SCIENCE = 'SCIENCE',
+  CHECKLIST = 'CHECKLIST'
 }

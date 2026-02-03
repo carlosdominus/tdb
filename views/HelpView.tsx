@@ -1,91 +1,64 @@
 
 import React from 'react';
 import { GlassCard } from '../components/GlassCard';
-import { Play, Search, MessageCircle, ChevronRight, HelpCircle, ChevronLeft } from 'lucide-react';
+import { MessageCircle, Mail, ChevronRight, HelpCircle, ChevronLeft, ShieldCheck } from 'lucide-react';
 
 export const HelpView: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
-  const videos = [
-    { title: 'Primeiros Passos: Como navegar no App', duration: '3:45', thumbnail: 'https://picsum.photos/seed/h1/800/450' },
-    { title: 'Configurando seus Lembretes Diários', duration: '2:15', thumbnail: 'https://picsum.photos/seed/h2/800/450' },
-    { title: 'Entendendo os Gráficos de Evolução', duration: '4:10', thumbnail: 'https://picsum.photos/seed/h3/800/450' },
-    { title: 'Como registrar seus resultados diários', duration: '1:55', thumbnail: 'https://picsum.photos/seed/h4/800/450' },
-  ];
+  const supportEmail = "contato@suportmedia.com";
+  const whatsappUrl = "https://wa.me/558394186965";
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 mt-4">
+    <div className="space-y-10 animate-in fade-in duration-500 pb-12">
       {onBack && (
         <div className="mb-4">
-          <button onClick={onBack} className="flex items-center gap-2 text-[#86868B] hover:text-[#1B4D3E] transition-colors font-black text-[11px] uppercase tracking-[0.2em]">
+          <button onClick={onBack} className="flex items-center gap-2 text-[#86868B] hover:text-black transition-colors font-black text-[11px] uppercase tracking-[0.2em]">
             <ChevronLeft size={20} /> Voltar
           </button>
         </div>
       )}
 
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-[#1B4D3E] mb-2 uppercase tracking-tight">Central de Ajuda</h1>
-        <p className="text-[#86868B] font-medium">Tudo o que você precisa saber para dominar a ferramenta.</p>
+        <h1 className="text-4xl font-black text-black mb-2 uppercase tracking-tighter">Suporte VIP</h1>
+        <p className="text-[#86868B] font-bold text-sm uppercase tracking-widest">Estamos aqui para garantir sua evolução.</p>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-        <input 
-          type="text" 
-          placeholder="Qual sua dúvida?"
-          className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white border-none shadow-sm focus:ring-2 focus:ring-[#2ECC71] transition-all outline-none font-medium"
-        />
-      </div>
-
-      <section>
-        <h2 className="text-xl font-bold mb-6 text-[#1B4D3E] uppercase tracking-tight">Tutoriais em Vídeo</h2>
+      <section className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {videos.map((vid, i) => (
-            <GlassCard key={i} className="p-0 overflow-hidden group cursor-pointer border-none shadow-md" hoverEffect>
-              <div className="relative aspect-video bg-black flex items-center justify-center">
-                <img src={vid.thumbnail} alt={vid.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
-                <div className="relative z-10 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 group-hover:bg-[#2ECC71] group-hover:scale-110 transition-all">
-                  <Play size={24} fill="currentColor" />
-                </div>
-                <div className="absolute bottom-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-sm rounded-lg text-[10px] text-white font-bold">
-                  {vid.duration}
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="font-bold text-[#1B4D3E] text-sm leading-tight group-hover:text-[#2ECC71] transition-colors">{vid.title}</h3>
-              </div>
-            </GlassCard>
-          ))}
+          <GlassCard className="p-10 flex flex-col items-center text-center gap-6 group hover:bg-[#2ECC71]/5 transition-colors cursor-pointer border-none shadow-sm bg-white" onClick={() => window.open(whatsappUrl, '_blank')}>
+            <div className="w-20 h-20 rounded-[28px] bg-green-100 text-[#2ECC71] flex items-center justify-center group-hover:bg-[#2ECC71] group-hover:text-white transition-all shadow-sm">
+              <MessageCircle size={36} />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-black uppercase tracking-tight">WhatsApp Elite</h3>
+              <p className="text-xs text-[#86868B] font-bold uppercase tracking-widest mt-2">Atendimento imediato e humano</p>
+            </div>
+            <div className="mt-4 px-6 py-3 bg-gray-50 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-black">Abrir conversa</div>
+          </GlassCard>
+
+          <GlassCard className="p-10 flex flex-col items-center text-center gap-6 group hover:bg-black/5 transition-colors cursor-pointer border-none shadow-sm bg-white" onClick={() => window.location.href = `mailto:${supportEmail}`}>
+            <div className="w-20 h-20 rounded-[28px] bg-gray-100 text-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all shadow-sm">
+              <Mail size={36} />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-black uppercase tracking-tight">E-mail Oficial</h3>
+              <p className="text-xs text-[#86868B] font-bold uppercase tracking-widest mt-2">Para questões burocráticas ou PDFs</p>
+            </div>
+            <div className="mt-4 px-6 py-3 bg-gray-50 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-black">{supportEmail}</div>
+          </GlassCard>
         </div>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold text-[#1B4D3E] uppercase tracking-tight mb-2">Suporte Direto</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <GlassCard className="flex items-center justify-between group hover:bg-green-50 transition-colors cursor-pointer border-none shadow-sm" onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-green-100 text-[#2ECC71] flex items-center justify-center group-hover:bg-[#2ECC71] group-hover:text-white transition-all">
-                <MessageCircle size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold text-[#1B4D3E]">Suporte via WhatsApp</h3>
-                <p className="text-xs text-[#86868B] font-medium">Fale com nossa equipe agora</p>
-              </div>
-            </div>
-            <ChevronRight size={20} className="text-gray-300 group-hover:text-[#1B4D3E] transition-all" />
-          </GlassCard>
-
-          <GlassCard className="flex items-center justify-between group hover:bg-blue-50 transition-colors cursor-pointer border-none shadow-sm" onClick={() => alert("Central de artigos em desenvolvimento.")}>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                <HelpCircle size={24} />
-              </div>
-              <div>
-                <h3 className="font-bold text-[#1B4D3E]">Base de Conhecimento</h3>
-                <p className="text-xs text-[#86868B] font-medium">Artigos e guias detalhados</p>
-              </div>
-            </div>
-            <ChevronRight size={20} className="text-gray-300 group-hover:text-[#1B4D3E] transition-all" />
-          </GlassCard>
+      <section className="p-10 bg-black text-white rounded-[40px] flex items-start gap-8 shadow-2xl relative overflow-hidden">
+        <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 border border-white/10">
+          <ShieldCheck size={32} className="text-[#E63946]" />
         </div>
+        <div className="relative z-10">
+          <h4 className="text-2xl font-black uppercase tracking-tighter mb-2">Compromisso com o Resultado</h4>
+          <p className="text-sm text-gray-400 font-medium leading-relaxed">
+            Nossa equipe de suporte não apenas resolve problemas, ela orienta seu protocolo. Caso tenha dúvidas sobre dosagens ou reações, não hesite em nos contatar.
+          </p>
+        </div>
+        <div className="absolute top-0 right-0 w-64 h-64 gradient-primary opacity-10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
       </section>
     </div>
   );

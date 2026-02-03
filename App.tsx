@@ -1,25 +1,50 @@
 
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, AppState, UserProfile, Tonic, ProblemType } from './types.ts';
-import { MOCK_USER, INITIAL_MODULES, TONICS, PROBLEM_TO_TONIC } from './constants.tsx';
+import { MOCK_USER, INITIAL_MODULES, TONICS, PROBLEM_TO_TONIC, COLORS } from './constants.tsx';
 import { LoginView } from './views/LoginView.tsx';
 import { OnboardingView } from './views/OnboardingView.tsx';
 import { DashboardView } from './views/DashboardView.tsx';
 import { TonicDetailView } from './views/TonicDetailView.tsx';
 import { CatalogView } from './views/CatalogView.tsx';
-import { ModuleView } from './views/ModuleView.tsx';
+import { PremiumView } from './views/PremiumView.tsx';
 import { TrackerView } from './views/TrackerView.tsx';
+import { ChecklistView } from './views/ChecklistView.tsx';
 import { BonusesView } from './views/BonusesView.tsx';
 import { ProfileView } from './views/ProfileView.tsx';
-import { ScienceView } from './views/ScienceView.tsx';
 import { WarrantyView } from './views/WarrantyView.tsx';
 import { HelpView } from './views/HelpView.tsx';
+import { ScienceView } from './views/ScienceView.tsx';
 import { ExclusivePackageView } from './views/ExclusivePackageView.tsx';
 import { ExclusivePackage2View } from './views/ExclusivePackage2View.tsx';
 import { WelcomeModal } from './components/WelcomeModal.tsx';
 import { Logo } from './components/Logo.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
-import { Beaker, TrendingUp, Gift, ChevronLeft, Menu, Home, MessageCircle } from 'lucide-react';
+import { Home, Beaker, Crown, Zap, Gift, Menu, ListChecks } from 'lucide-react';
+
+const VIEW_TO_HASH: Record<View, string> = {
+  [View.DASHBOARD]: 'dashboard',
+  [View.CATALOG]: 'catalogo',
+  [View.PREMIUM]: 'premium',
+  [View.TRACKER]: 'turbo',
+  [View.CHECKLIST]: 'checklist',
+  [View.BONUSES]: 'bonus',
+  [View.WARRANTY]: 'garantia',
+  [View.HELP]: 'suporte',
+  [View.SCIENCE]: 'ciencia',
+  [View.PROFILE]: 'perfil',
+  [View.MODULE]: 'modulo',
+  [View.TONIC_DETAIL]: 'tonico',
+  [View.EXCLUSIVE_PACKAGE]: 'tonico-cavalo',
+  [View.EXCLUSIVE_PACKAGE_2]: 'guia-posicoes',
+  [View.LOGIN]: 'login',
+  [View.ONBOARDING]: 'onboarding'
+};
+
+const HASH_TO_VIEW: Record<string, View> = Object.entries(VIEW_TO_HASH).reduce(
+  (acc, [view, hash]) => ({ ...acc, [hash]: view as View }),
+  {}
+);
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.LOGIN);
@@ -33,248 +58,184 @@ const App: React.FC = () => {
     hasSeenWelcomeVideo: false
   });
 
-  const WHATSAPP_URL = 'https://wa.me/558394186965';
+  // Helper to change hash and trigger routing
+  const navigateTo = (view: View, id?: string) => {
+    let hash = VIEW_TO_HASH[view];
+    if (view === View.TONIC_DETAIL && id) {
+      hash = `${hash}/${id}`;
+    }
+    window.location.hash = hash;
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const fullHash = window.location.hash.replace('#', '');
+      const [hashBase, id] = fullHash.split('/');
+      const view = HASH_TO_VIEW[hashBase];
+
+      if (view) {
+        const isAuthView = view !== View.LOGIN && view !== View.ONBOARDING;
+        const saved = localStorage.getItem('protocolo_premium_state');
+        const isLoggedIn = saved ? JSON.parse(saved).isLoggedIn : state.isLoggedIn;
+
+        if (isAuthView && !isLoggedIn) {
+          window.location.hash = 'login';
+          return;
+        }
+
+        setCurrentView(view);
+        if (id) setActiveTonicId(id);
+      } else if (!state.isLoggedIn && !localStorage.getItem('protocolo_premium_state')) {
+        window.location.hash = 'login';
+      } else {
+        window.location.hash = 'dashboard';
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [state.isLoggedIn]);
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.body.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [currentView, activeTonicId]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('protocolo_v2_state');
+    const saved = localStorage.getItem('protocolo_premium_state');
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed.isLoggedIn) {
         setState(parsed);
-        if (parsed.user?.onboardingCompleted) {
-          setCurrentView(View.DASHBOARD);
-        } else {
-          setCurrentView(View.ONBOARDING);
-        }
       }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('protocolo_v2_state', JSON.stringify(state));
+    localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
   }, [state]);
 
   const handleLogin = (name: string, email: string) => {
-    setState(prev => ({
-      ...prev,
-      isLoggedIn: true,
-      user: { 
-        ...MOCK_USER, 
-        name: name || MOCK_USER.name, 
-        email: email || MOCK_USER.email 
-      }
-    }));
-    setCurrentView(View.ONBOARDING);
+    const newUser = { 
+      ...MOCK_USER, 
+      name, 
+      email,
+      createdAt: new Date().toISOString()
+    };
+    setState(prev => ({ ...prev, isLoggedIn: true, user: newUser }));
+    navigateTo(View.ONBOARDING);
   };
 
   const handleOnboardingComplete = (profile: UserProfile) => {
     setState(prev => ({
       ...prev,
-      user: prev.user ? { 
-        ...prev.user, 
-        profile, 
-        onboardingCompleted: true,
-        currentDay: 1
-      } : null
+      user: prev.user ? { ...prev.user, profile, onboardingCompleted: true } : null
     }));
-    setCurrentView(View.DASHBOARD);
+    navigateTo(View.DASHBOARD);
   };
 
   const handleLogout = () => {
-    setState({
-      user: null,
-      modules: INITIAL_MODULES,
-      checklist: {},
-      isLoggedIn: false,
-      hasSeenWelcomeVideo: false
+    setState({ user: null, modules: INITIAL_MODULES, checklist: {}, isLoggedIn: false, hasSeenWelcomeVideo: false });
+    localStorage.removeItem('protocolo_premium_state');
+    navigateTo(View.LOGIN);
+  };
+
+  const handleTonicToggle = (date: string, type: 'main' | 'complementary', tonicId?: string) => {
+    setState(prev => {
+      const current = prev.checklist[date] || { date, mainTonic: false, complementary: [] };
+      let updated = { ...current };
+
+      if (type === 'main') {
+        updated.mainTonic = !updated.mainTonic;
+      } else if (type === 'complementary' && tonicId) {
+        updated.complementary = updated.complementary.includes(tonicId)
+          ? updated.complementary.filter(id => id !== tonicId)
+          : [...updated.complementary, tonicId];
+      }
+
+      return { ...prev, checklist: { ...prev.checklist, [date]: updated } };
     });
-    setCurrentView(View.LOGIN);
-    localStorage.removeItem('protocolo_v2_state');
   };
 
   const closeWelcomeModal = () => {
     setState(prev => ({ ...prev, hasSeenWelcomeVideo: true }));
   };
 
-  const navigateToTonic = (id: string) => {
-    setActiveTonicId(id);
-    setCurrentView(View.TONIC_DETAIL);
-  };
-
-  const toggleTonicCheck = (date: string, type: 'main' | 'complementary', tonicId?: string) => {
-    setState(prev => {
-      const current = prev.checklist[date] || { date, mainTonic: false, complementary: [] };
-      if (type === 'main') {
-        const isNowDone = !current.mainTonic;
-        const newStreak = isNowDone ? (prev.user?.streak || 0) + 1 : Math.max(0, (prev.user?.streak || 0) - 1);
-        return {
-          ...prev,
-          user: prev.user ? { ...prev.user, streak: newStreak } : null,
-          checklist: {
-            ...prev.checklist,
-            [date]: { ...current, mainTonic: isNowDone }
-          }
-        };
-      } else if (tonicId) {
-        const isPresent = current.complementary.includes(tonicId);
-        const newComp = isPresent 
-          ? current.complementary.filter(id => id !== tonicId) 
-          : [...current.complementary, tonicId];
-        return {
-          ...prev,
-          checklist: {
-            ...prev.checklist,
-            [date]: { ...current, complementary: newComp }
-          }
-        };
-      }
-      return prev;
-    });
-  };
-
   const renderView = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const isTodayDone = state.checklist[today]?.mainTonic || false;
-
     switch (currentView) {
-      case View.LOGIN:
-        return <LoginView onLogin={handleLogin} />;
-      case View.ONBOARDING:
-        return <OnboardingView onComplete={handleOnboardingComplete} />;
-      case View.DASHBOARD:
-        return <DashboardView 
-          state={state} 
-          onNavigate={setCurrentView} 
-          onTonicNavigate={navigateToTonic}
-          onTonicToggle={toggleTonicCheck}
-        />;
-      case View.TONIC_DETAIL:
-        return <TonicDetailView 
-          tonic={TONICS[activeTonicId || 'anti-broxada']} 
-          isMain={activeTonicId === (PROBLEM_TO_TONIC[state.user?.profile?.mainProblem as ProblemType])}
-          onBack={() => setCurrentView(View.DASHBOARD)}
-          onNavigate={setCurrentView}
-          onMarkDone={(id) => toggleTonicCheck(today, id === (PROBLEM_TO_TONIC[state.user?.profile?.mainProblem as ProblemType]) ? 'main' : 'complementary', id)}
-          isDone={activeTonicId === (PROBLEM_TO_TONIC[state.user?.profile?.mainProblem as ProblemType]) ? isTodayDone : state.checklist[today]?.complementary?.includes(activeTonicId!)}
-        />;
-      case View.CATALOG:
-        return <CatalogView 
-          onBack={() => setCurrentView(View.DASHBOARD)} 
-          onTonicNavigate={navigateToTonic}
-          onNavigate={setCurrentView}
-          mainProblem={state.user?.profile?.mainProblem as ProblemType || 'broxada'}
-        />;
-      case View.TRACKER:
-        return <TrackerView state={state} onBack={() => setCurrentView(View.DASHBOARD)} toggleCheck={(date, type) => toggleTonicCheck(date, type === 'morning' ? 'main' : 'complementary')} />;
-      case View.BONUSES:
-        return <BonusesView onBack={() => setCurrentView(View.DASHBOARD)} />;
-      case View.PROFILE:
-        return <ProfileView state={state} onBack={() => setCurrentView(View.DASHBOARD)} onLogout={handleLogout} onNavigate={setCurrentView} />;
-      case View.SCIENCE:
-        return <ScienceView onBack={() => setCurrentView(View.DASHBOARD)} />;
-      case View.WARRANTY:
-        return <WarrantyView onBack={() => setCurrentView(View.DASHBOARD)} />;
-      case View.HELP:
-        return <HelpView onBack={() => setCurrentView(View.DASHBOARD)} />;
-      case View.MODULE:
-        return <ModuleView module={state.modules[0]} onBack={() => setCurrentView(View.DASHBOARD)} onNavigate={setCurrentView} />;
-      case View.EXCLUSIVE_PACKAGE:
-        return <ExclusivePackageView onBack={() => setCurrentView(View.CATALOG)} />;
-      case View.EXCLUSIVE_PACKAGE_2:
-        return <ExclusivePackage2View onBack={() => setCurrentView(View.CATALOG)} />;
-      default:
-        return <DashboardView state={state} onNavigate={setCurrentView} onTonicNavigate={navigateToTonic} onTonicToggle={toggleTonicCheck} />;
+      case View.LOGIN: return <LoginView onLogin={handleLogin} />;
+      case View.ONBOARDING: return <OnboardingView onComplete={handleOnboardingComplete} />;
+      case View.DASHBOARD: return <DashboardView state={state} onNavigate={navigateTo} onTonicNavigate={(id) => navigateTo(View.TONIC_DETAIL, id)} onTonicToggle={handleTonicToggle} />;
+      case View.CATALOG: return <CatalogView onBack={() => navigateTo(View.DASHBOARD)} onTonicNavigate={(id) => navigateTo(View.TONIC_DETAIL, id)} onNavigate={navigateTo} mainProblem={state.user?.profile?.mainProblem as ProblemType || 'broxada'} />;
+      case View.PREMIUM: return <PremiumView onBack={() => navigateTo(View.DASHBOARD)} />;
+      case View.TRACKER: return <TrackerView state={state} onBack={() => navigateTo(View.DASHBOARD)} onNavigate={navigateTo} toggleCheck={handleTonicToggle} />;
+      case View.CHECKLIST: return <ChecklistView state={state} onBack={() => navigateTo(View.DASHBOARD)} onTonicToggle={handleTonicToggle} />;
+      case View.BONUSES: return <BonusesView onBack={() => navigateTo(View.TRACKER)} />;
+      case View.WARRANTY: return <WarrantyView onBack={() => navigateTo(View.DASHBOARD)} firstAccessDate={state.user?.createdAt || ''} />;
+      case View.HELP: return <HelpView onBack={() => navigateTo(View.DASHBOARD)} />;
+      case View.SCIENCE: return <ScienceView onBack={() => navigateTo(View.DASHBOARD)} />;
+      case View.PROFILE: return <ProfileView state={state} onBack={() => navigateTo(View.DASHBOARD)} onLogout={handleLogout} onNavigate={navigateTo} />;
+      case View.TONIC_DETAIL: {
+        const tonic = TONICS[activeTonicId || ''] || TONICS['anti-broxada'];
+        const isMain = activeTonicId === (PROBLEM_TO_TONIC[state.user?.profile?.mainProblem as ProblemType]);
+        const today = new Date().toISOString().split('T')[0];
+        const isDone = isMain ? (state.checklist[today]?.mainTonic || false) : (state.checklist[today]?.complementary?.includes(activeTonicId || '') || false);
+        return <TonicDetailView tonic={tonic} isMain={isMain} onBack={() => navigateTo(View.CATALOG)} onNavigate={navigateTo} onMarkDone={(id) => handleTonicToggle(today, isMain ? 'main' : 'complementary', id)} isDone={isDone} />;
+      }
+      case View.EXCLUSIVE_PACKAGE: return <ExclusivePackageView onBack={() => navigateTo(View.TRACKER)} />;
+      case View.EXCLUSIVE_PACKAGE_2: return <ExclusivePackage2View onBack={() => navigateTo(View.TRACKER)} />;
+      default: return <DashboardView state={state} onNavigate={navigateTo} onTonicNavigate={(id) => navigateTo(View.TONIC_DETAIL, id)} onTonicToggle={handleTonicToggle} />;
     }
   };
 
-  if (currentView === View.LOGIN) {
-    return <LoginView onLogin={handleLogin} />;
-  }
-
-  if (currentView === View.ONBOARDING) {
-    return <OnboardingView onComplete={handleOnboardingComplete} />;
-  }
+  if (currentView === View.LOGIN) return <LoginView onLogin={handleLogin} />;
+  if (currentView === View.ONBOARDING) return <OnboardingView onComplete={handleOnboardingComplete} />;
 
   return (
-    <div className="min-h-screen pb-24 md:pb-0 md:pt-16">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-        onNavigate={setCurrentView} 
-        onLogout={handleLogout}
-        currentView={currentView}
-      />
-
-      {/* Floating Sticky Help Nudge - Unified for Desktop and Mobile */}
-      <div className="fixed top-[110px] left-4 z-40 animate-float">
-        <button 
-          onClick={() => window.open(WHATSAPP_URL, '_blank')}
-          className="flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-green-100 group transition-all hover:scale-105 active:scale-95"
-        >
-          <div className="w-8 h-8 gradient-primary text-white rounded-full flex items-center justify-center shadow-md animate-pulse">
-            <MessageCircle size={16} />
-          </div>
-          <div className="flex flex-col items-start leading-none pr-1">
-            <span className="text-[10px] font-black text-[#1B4D3E] uppercase tracking-tighter">Ficou com dúvidas?</span>
-            <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-widest">Chamar no Whats</span>
-          </div>
-        </button>
-      </div>
-
-      {/* Welcome Modal Disparado na primeira vez */}
-      {!state.hasSeenWelcomeVideo && state.user?.onboardingCompleted && (
-        <WelcomeModal 
-          userName={state.user.name.split(' ')[0]} 
-          onClose={closeWelcomeModal} 
-        />
+    <div className="min-h-screen pb-24 md:pb-0 bg-[#F8F9FA]">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} onNavigate={navigateTo} onLogout={handleLogout} currentView={currentView} />
+      
+      {state.isLoggedIn && state.user?.onboardingCompleted && !state.hasSeenWelcomeVideo && (
+        <WelcomeModal onClose={closeWelcomeModal} userName={state.user.name} />
       )}
 
-      <header className="fixed top-0 left-0 right-0 glass z-50 px-6 py-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-3">
-          <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-[#1B4D3E] hover:bg-gray-100 rounded-xl transition-colors">
+      <header className="fixed top-0 left-0 right-0 glass z-50 px-6 py-5 flex items-center justify-between border-b border-gray-100">
+        <div className="flex items-center gap-4">
+          <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-black hover:bg-gray-100 rounded-xl transition-colors">
             <Menu size={24} />
           </button>
-          <div className="flex items-center gap-3" onClick={() => setCurrentView(View.DASHBOARD)} style={{cursor: 'pointer'}}>
-            <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigateTo(View.DASHBOARD)}>
+            <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center text-white">
               <Logo size={24} />
             </div>
-            <span className="font-poppins font-bold text-lg hidden sm:block whitespace-nowrap text-[#1B4D3E]">Protocolo Força Natural</span>
+            <span className="font-poppins font-black text-lg hidden sm:block tracking-tighter text-black uppercase">PROTOCOL <span className="text-[#E63946]">ELITE</span></span>
           </div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-4">
-          <div onClick={() => setCurrentView(View.PROFILE)} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1.5 rounded-2xl transition-all">
-            <div className="w-8 h-8 bg-[#1B4D3E]/10 text-[#1B4D3E] rounded-full flex items-center justify-center overflow-hidden font-bold text-xs uppercase">
-              {state.user?.name.charAt(0)}
-            </div>
-            <span className="text-sm font-bold text-[#1B4D3E] hidden sm:block">{state.user?.name.split(' ')[0]}</span>
-          </div>
+        <div onClick={() => navigateTo(View.PROFILE)} className="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-black text-sm uppercase shadow-lg cursor-pointer">
+          {state.user?.name.charAt(0)}
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 pt-28 pb-20 md:py-16 animate-in fade-in duration-500">
+      <main className="max-w-4xl mx-auto px-6 pt-32 pb-20 md:py-24">
         {renderView()}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 glass md:hidden z-50 flex items-center py-4 px-4 border-t border-gray-100 justify-start gap-2 pr-24">
-        <NavButton active={currentView === View.DASHBOARD} icon={<Home size={22} />} label="Home" onClick={() => setCurrentView(View.DASHBOARD)} />
-        <NavButton active={currentView === View.CATALOG} icon={<Beaker size={22} />} label="Tônicos" onClick={() => setCurrentView(View.CATALOG)} />
-        <NavButton active={currentView === View.TRACKER} icon={<TrendingUp size={22} />} label="Stats" onClick={() => setCurrentView(View.TRACKER)} />
-        <NavButton active={currentView === View.BONUSES} icon={<Gift size={22} />} label="Bônus" onClick={() => setCurrentView(View.BONUSES)} />
+      {/* Ajuste do menu inferior: Barra cheia (right-0) com padding (pr-28) para deixar espaço para o chat bubble */}
+      <nav className="fixed bottom-0 left-0 right-0 glass-dark md:hidden z-50 flex items-center py-5 px-6 pr-28 border-t border-white/5 justify-between shadow-2xl">
+        <NavButton active={currentView === View.CATALOG} icon={<Beaker size={22} />} label="Tônicos" onClick={() => navigateTo(View.CATALOG)} />
+        <NavButton active={currentView === View.PREMIUM} icon={<Crown size={22} />} label="Premium" onClick={() => navigateTo(View.PREMIUM)} />
+        <NavButton active={currentView === View.TRACKER} icon={<Zap size={22} />} label="Turbo" onClick={() => navigateTo(View.TRACKER)} />
+        <NavButton active={currentView === View.CHECKLIST} icon={<ListChecks size={22} />} label="Progresso" onClick={() => navigateTo(View.CHECKLIST)} />
       </nav>
     </div>
   );
 };
 
 const NavButton: React.FC<{ active: boolean; icon: React.ReactNode; label: string; onClick: () => void }> = ({ active, icon, label, onClick }) => (
-  <button onClick={onClick} className={`flex flex-col items-center gap-1 px-3 transition-all ${active ? 'text-[#1B4D3E] scale-105' : 'text-[#86868B]'}`}>
+  <button onClick={onClick} className={`flex flex-col items-center gap-1.5 transition-all ${active ? 'text-[#E63946] scale-110' : 'text-gray-500'}`}>
     {icon}
-    <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
+    <span className="text-[9px] font-black uppercase tracking-[0.2em]">{label}</span>
   </button>
 );
 

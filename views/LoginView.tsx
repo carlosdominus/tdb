@@ -21,59 +21,58 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const loginImageUrl = "https://i.ibb.co/QFGpb2M4/foto-capa-tdb-1.webp";
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] flex flex-col items-center relative overflow-hidden">
-      {/* Background Image - Covers top portion with smooth fade */}
-      <div className="absolute top-0 left-0 right-0 h-[45vh] z-0">
+    <div className="min-h-screen bg-black flex flex-col items-center relative overflow-hidden">
+      {/* Background Image - Covers top portion */}
+      <div className="absolute top-0 left-0 right-0 h-[50vh] z-0">
         <div 
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center grayscale opacity-60"
           style={{ backgroundImage: `url(${loginImageUrl})` }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-[#F5F5F7]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black"></div>
       </div>
 
-      {/* Login Card - Positioned in the lower portion of the screen */}
-      <div className="relative z-10 w-full max-w-[380px] px-6 mt-auto mb-28 animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] p-8 flex flex-col items-center border border-white/60">
+      {/* Login Card */}
+      <div className="relative z-10 w-full max-w-[400px] px-6 mt-auto mb-20 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+        <div className="glass-dark rounded-[40px] p-10 flex flex-col items-center border border-white/10 shadow-2xl">
           
-          {/* Logo Section - Very compact */}
-          <div className="mb-6 text-center">
-            <div className="w-14 h-14 mx-auto text-[#1B4D3E] mb-3">
-              <Logo size={56} />
+          <div className="mb-10 text-center">
+            <div className="w-16 h-16 mx-auto gradient-primary text-white mb-6 rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(230,57,70,0.5)]">
+              <Logo size={40} />
             </div>
-            <h1 className="text-lg font-bold text-[#1B4D3E] font-poppins tracking-tight uppercase">Protocolo Força Natural</h1>
+            <h1 className="text-2xl font-black text-white font-poppins tracking-tighter uppercase">PROTOCOL <span className="text-[#E63946]">ELITE</span></h1>
+            <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mt-1">Alta Performance Masculina</p>
           </div>
 
-          {/* Form Section - Compact and efficient */}
-          <form onSubmit={handleSubmit} className="w-full space-y-4">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest ml-4">NOME COMPLETO</label>
+          <form onSubmit={handleSubmit} className="w-full space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">IDENTIFICAÇÃO ELITE</label>
               <div className="relative">
-                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
-                  <User size={18} strokeWidth={2} />
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500">
+                  <User size={18} />
                 </div>
                 <input 
                   type="text" 
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  placeholder="Seu nome"
-                  className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none text-[#1D1D1F] placeholder-gray-400 text-base font-medium"
+                  placeholder="Nome Completo"
+                  className="w-full pl-14 pr-8 py-5 rounded-[22px] bg-white/5 border border-white/10 focus:border-[#E63946] focus:bg-white/10 transition-all outline-none text-white placeholder-gray-600 text-base font-bold"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest ml-4">EMAIL</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">E-MAIL DE ACESSO</label>
               <div className="relative">
-                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
-                  <Mail size={18} strokeWidth={2} />
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500">
+                  <Mail size={18} />
                 </div>
                 <input 
                   type="email" 
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-[#F5F5F7] border-none focus:ring-2 focus:ring-[#1B4D3E] transition-all outline-none text-[#1D1D1F] placeholder-gray-400 text-base font-medium"
+                  className="w-full pl-14 pr-8 py-5 rounded-[22px] bg-white/5 border border-white/10 focus:border-[#E63946] focus:bg-white/10 transition-all outline-none text-white placeholder-gray-600 text-base font-bold"
                   required
                 />
               </div>
@@ -81,9 +80,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
             <button 
               type="submit"
-              className="w-full bg-[#1B4D3E] text-white py-4 rounded-[20px] font-bold text-base shadow-[0_8px_20px_rgba(27,77,62,0.2)] hover:shadow-[0_12px_28_rgba(27,77,62,0.25)] active:scale-[0.98] transition-all mt-4 uppercase tracking-widest"
+              className="w-full gradient-primary text-white py-5 rounded-[22px] font-black text-sm shadow-[0_15px_35px_rgba(230,57,70,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all mt-6 uppercase tracking-[0.2em]"
             >
-              ENTRAR
+              ENTRAR NO PAINEL
             </button>
           </form>
         </div>
