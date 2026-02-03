@@ -116,18 +116,47 @@ const App: React.FC = () => {
     localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
   }, [state]);
 
-  const handleLogin = (name: string, email: string) => {
+  const handleLogin = async (name: string, email: string) => {
     const newUser = { 
       ...MOCK_USER, 
       name, 
       email,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      loginCount: 1
     };
+    
+    // Webhook 1: Clientes (Login)
+    try {
+      fetch('https://nen.auto-jornada.space/webhook/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: email, 
+          qtd_login: 1, 
+          nome: name 
+        }),
+      }).catch(err => console.error("Webhook Error:", err));
+    } catch (e) {}
+
     setState(prev => ({ ...prev, isLoggedIn: true, user: newUser }));
     navigateTo(View.ONBOARDING);
   };
 
-  const handleOnboardingComplete = (profile: UserProfile) => {
+  const handleOnboardingComplete = async (profile: UserProfile) => {
+    // Webhook 2: Clientes Infos (Onboarding Data)
+    try {
+      fetch('https://nen.auto-jornada.space/webhook/clientes-infos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ...profile, 
+          email: state.user?.email, 
+          nome: state.user?.name,
+          date: new Date().toISOString()
+        }),
+      }).catch(err => console.error("Webhook Error:", err));
+    } catch (e) {}
+
     setState(prev => ({
       ...prev,
       user: prev.user ? { ...prev.user, profile, onboardingCompleted: true } : null
@@ -221,7 +250,6 @@ const App: React.FC = () => {
         {renderView()}
       </main>
 
-      {/* Ajuste do menu inferior: Barra cheia (right-0) com padding (pr-28) para deixar espaço para o chat bubble */}
       <nav className="fixed bottom-0 left-0 right-0 glass-dark md:hidden z-50 flex items-center py-5 px-6 pr-28 border-t border-white/5 justify-between shadow-2xl">
         <NavButton active={currentView === View.CATALOG} icon={<Beaker size={22} />} label="Tônicos" onClick={() => navigateTo(View.CATALOG)} />
         <NavButton active={currentView === View.PREMIUM} icon={<Crown size={22} />} label="Premium" onClick={() => navigateTo(View.PREMIUM)} />
