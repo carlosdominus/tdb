@@ -46,19 +46,14 @@ const HASH_TO_VIEW: Record<string, View> = Object.entries(VIEW_TO_HASH).reduce(
   {}
 );
 
-// Função auxiliar para carregar o estado inicial de forma síncrona
-const loadPersistedState = (): AppState => {
+// Carregamento síncrono para garantir que o app já comece no estado certo
+const loadState = (): AppState => {
   const saved = localStorage.getItem('protocolo_premium_state');
   if (saved) {
     try {
-      const parsed = JSON.parse(saved);
-      // Garantir que módulos iniciais existam se o estado salvo for antigo
-      return {
-        ...parsed,
-        modules: parsed.modules || INITIAL_MODULES
-      };
+      return JSON.parse(saved);
     } catch (e) {
-      console.error("Erro ao carregar dados salvos", e);
+      console.error("Erro ao ler localStorage", e);
     }
   }
   return {
@@ -71,12 +66,23 @@ const loadPersistedState = (): AppState => {
 };
 
 const App: React.FC = () => {
-  const [state, setState] = useState<AppState>(loadPersistedState());
+  const [state, setState] = useState<AppState>(loadState());
   const [currentView, setCurrentView] = useState<View>(View.LOGIN);
   const [activeTonicId, setActiveTonicId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Navegação baseada em Hash
+  // Garantir que a página sempre comece no topo ao montar e ao trocar de view
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    // Reforço para alguns browsers mobile
+    setTimeout(() => window.scrollTo(0, 0), 10);
+  }, [currentView, activeTonicId]);
+
+  // Persistir estado sempre que houver mudança
+  useEffect(() => {
+    localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
+  }, [state]);
+
   const navigateTo = (view: View, id?: string) => {
     let hash = VIEW_TO_HASH[view];
     if (view === View.TONIC_DETAIL && id) {
@@ -85,29 +91,25 @@ const App: React.FC = () => {
     window.location.hash = hash;
   };
 
-  // Gerenciador de Roteamento Centralizado
+  // Roteamento baseado em autenticação e onboarding
   useEffect(() => {
     const handleHashChange = () => {
       const fullHash = window.location.hash.replace('#', '');
       const [hashBase, id] = fullHash.split('/');
-      
-      // Decidir qual a view correta baseada no estado de login e na URL desejada
-      let targetView = HASH_TO_VIEW[hashBase];
+      const targetView = HASH_TO_VIEW[hashBase];
 
       if (!state.isLoggedIn) {
-        // Se não logado, só pode ver Login
         if (targetView !== View.LOGIN) {
           window.location.hash = 'login';
           return;
         }
       } else if (!state.user?.onboardingCompleted) {
-        // Se logado mas sem onboarding, forçar onboarding
         if (targetView !== View.ONBOARDING) {
           window.location.hash = 'onboarding';
           return;
         }
       } else {
-        // Se logado e com onboarding, não pode ver Login ou Onboarding
+        // Se já está logado e fez onboarding, não deixa voltar pro login/onboarding
         if (!targetView || targetView === View.LOGIN || targetView === View.ONBOARDING) {
           window.location.hash = 'dashboard';
           return;
@@ -119,20 +121,10 @@ const App: React.FC = () => {
     };
 
     window.addEventListener('hashchange', handleHashChange);
-    // Disparar uma vez manualmente para validar a rota inicial
     handleHashChange();
 
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [state.isLoggedIn, state.user?.onboardingCompleted]);
-
-  // Persistência automática
-  useEffect(() => {
-    localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
-  }, [state]);
-
-  useLayoutEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [currentView, activeTonicId]);
 
   const handleLogin = async (name: string, email: string) => {
     const newUser = { 
@@ -140,37 +132,32 @@ const App: React.FC = () => {
       name, 
       email,
       createdAt: new Date().toISOString(),
-      loginCount: 1,
       onboardingCompleted: false
     };
     
-    // Webhook 1: Clientes (Sincronização de Login)
-    try {
-      fetch('https://nen.auto-jornada.space/webhook/clientes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, qtd_login: 1, nome: name }),
-      }).catch(e => console.error("Webhook 1 failed", e));
-    } catch (e) {}
+    // Webhook 1: Login
+    fetch('https://nen.auto-jornada.space/webhook/clientes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, qtd_login: 1, nome: name }),
+    }).catch(() => {});
 
     setState(prev => ({ ...prev, isLoggedIn: true, user: newUser }));
     navigateTo(View.ONBOARDING);
   };
 
   const handleOnboardingComplete = async (profile: UserProfile) => {
-    // Webhook 2: Clientes Infos (Todos os dados do formulário)
-    try {
-      fetch('https://nen.auto-jornada.space/webhook/clientes-infos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ...profile, 
-          email: state.user?.email, 
-          nome: state.user?.name,
-          date: new Date().toISOString()
-        }),
-      }).catch(e => console.error("Webhook 2 failed", e));
-    } catch (e) {}
+    // Webhook 2: Dados do Formulário
+    fetch('https://nen.auto-jornada.space/webhook/clientes-infos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        ...profile, 
+        email: state.user?.email, 
+        nome: state.user?.name,
+        date: new Date().toISOString()
+      }),
+    }).catch(() => {});
 
     setState(prev => ({
       ...prev,
@@ -233,9 +220,7 @@ const App: React.FC = () => {
     }
   };
 
-  // Se o estado inicial já indicar login, renderizamos o layout com sidebar
   const isAuthPage = currentView === View.LOGIN || currentView === View.ONBOARDING;
-
   if (isAuthPage) return renderView();
 
   return (
@@ -267,7 +252,7 @@ const App: React.FC = () => {
         {renderView()}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 glass-dark md:hidden z-50 flex items-center py-5 px-6 pr-28 border-t border-white/5 justify-between shadow-2xl">
+      <nav className="fixed bottom-0 left-0 right-0 glass-dark md:hidden z-50 flex items-center py-5 pl-6 pr-24 border-t border-white/5 justify-between shadow-2xl">
         <NavButton active={currentView === View.CATALOG} icon={<Beaker size={22} />} label="Tônicos" onClick={() => navigateTo(View.CATALOG)} />
         <NavButton active={currentView === View.PREMIUM} icon={<Crown size={22} />} label="Premium" onClick={() => navigateTo(View.PREMIUM)} />
         <NavButton active={currentView === View.TRACKER} icon={<Zap size={22} />} label="Turbo" onClick={() => navigateTo(View.TRACKER)} />

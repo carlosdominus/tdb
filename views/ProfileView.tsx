@@ -12,8 +12,19 @@ interface ProfileViewProps {
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ state, onBack, onLogout, onNavigate }) => {
-  const diffTime = Math.abs(new Date().getTime() - new Date(state.user?.createdAt || '').getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // Cálculo baseado em datas do calendário (zerando as horas)
+  const getDiffDays = () => {
+    const createdDate = new Date(state.user?.createdAt || new Date());
+    createdDate.setHours(0, 0, 0, 0);
+    
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = Math.abs(todayDate.getTime() - createdDate.getTime());
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  };
+
+  const diffDays = getDiffDays();
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -27,7 +38,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ state, onBack, onLogou
         <div className="mt-6 flex gap-3">
            <span className="px-4 py-1.5 bg-black text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">Membro Premium</span>
            <span className="px-4 py-1.5 bg-red-50 text-[#E63946] rounded-full text-[10px] font-black uppercase tracking-widest border border-red-100 flex items-center gap-2">
-             <Activity size={12} /> {diffDays} DIAS ATIVOS
+             <Activity size={12} /> {diffDays} {diffDays === 1 ? 'DIA ATIVO' : 'DIAS ATIVOS'}
            </span>
         </div>
       </div>

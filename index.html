@@ -54,6 +54,21 @@
         font-size: 16px !important;
       }
     </style>
+    <script>
+      (function(d,t) {
+        var BASE_URL="https://chat.auto-jornada.space";
+        var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=BASE_URL+"/packs/js/sdk.js";
+        g.async = true;
+        s.parentNode.insertBefore(g,s);
+        g.onload=function(){
+          window.chatwootSDK.run({
+            websiteToken: 'Px5GPQn2ukGNvv4TVzWQpD7q',
+            baseUrl: BASE_URL
+          })
+        }
+      })(document,"script");
+    </script>
   <script type="importmap">
 {
   "imports": {
@@ -72,22 +87,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="index.tsx"></script>
-    
-    <!-- SCRIPT DE CHAT MANUAL -->
-    <script>
-      (function(d,t) {
-        var BASE_URL="https://chat.auto-jornada.space";
-        var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-        g.src=BASE_URL+"/packs/js/sdk.js";
-        g.async = true;
-        s.parentNode.insertBefore(g,s);
-        g.onload=function(){
-          window.chatwootSDK.run({
-            websiteToken: 'Px5GPQn2ukGNvv4TVzWQpD7q',
-            baseUrl: BASE_URL
-          })
-        }
-      })(document,"script");
-    </script>
   </body>
 </html>
