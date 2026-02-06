@@ -22,6 +22,8 @@ import { Logo } from './components/Logo.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
 import { Home, Beaker, Crown, Zap, Gift, Menu, ListChecks } from 'lucide-react';
 
+const STORAGE_KEY = 'protocolo_forca_natural_v2';
+
 const VIEW_TO_HASH: Record<View, string> = {
   [View.DASHBOARD]: 'dashboard',
   [View.CATALOG]: 'catalogo',
@@ -46,12 +48,17 @@ const HASH_TO_VIEW: Record<string, View> = Object.entries(VIEW_TO_HASH).reduce(
   {}
 );
 
-// Carregamento síncrono para garantir que o app já comece no estado certo
+// Carregamento síncrono ultra-robusto
 const loadState = (): AppState => {
-  const saved = localStorage.getItem('protocolo_premium_state');
+  const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      // Garante que se já concluiu onboarding, os flags estão corretos
+      if (parsed.user && parsed.user.onboardingCompleted) {
+        parsed.isLoggedIn = true;
+      }
+      return parsed;
     } catch (e) {
       console.error("Erro ao ler localStorage", e);
     }
@@ -71,17 +78,14 @@ const App: React.FC = () => {
   const [activeTonicId, setActiveTonicId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Garantir que a página sempre comece no topo ao montar e ao trocar de view
+  // Efeito de persistência imediata
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
+
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    // Reforço para alguns browsers mobile
-    setTimeout(() => window.scrollTo(0, 0), 10);
   }, [currentView, activeTonicId]);
-
-  // Persistir estado sempre que houver mudança
-  useEffect(() => {
-    localStorage.setItem('protocolo_premium_state', JSON.stringify(state));
-  }, [state]);
 
   const navigateTo = (view: View, id?: string) => {
     let hash = VIEW_TO_HASH[view];
@@ -91,25 +95,28 @@ const App: React.FC = () => {
     window.location.hash = hash;
   };
 
-  // Roteamento baseado em autenticação e onboarding
+  // Roteador Inteligente: Bloqueia retorno ao onboarding/login se já estiver pronto
   useEffect(() => {
     const handleHashChange = () => {
       const fullHash = window.location.hash.replace('#', '');
       const [hashBase, id] = fullHash.split('/');
       const targetView = HASH_TO_VIEW[hashBase];
 
+      // LOGICA DE PROTEÇÃO
       if (!state.isLoggedIn) {
+        // Se não logou, obriga login
         if (targetView !== View.LOGIN) {
           window.location.hash = 'login';
           return;
         }
       } else if (!state.user?.onboardingCompleted) {
+        // Se logou mas não fez onboarding, obriga onboarding
         if (targetView !== View.ONBOARDING) {
           window.location.hash = 'onboarding';
           return;
         }
       } else {
-        // Se já está logado e fez onboarding, não deixa voltar pro login/onboarding
+        // SE JÁ FEZ TUDO: Nunca deixa voltar para login ou onboarding
         if (!targetView || targetView === View.LOGIN || targetView === View.ONBOARDING) {
           window.location.hash = 'dashboard';
           return;
@@ -126,16 +133,17 @@ const App: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [state.isLoggedIn, state.user?.onboardingCompleted]);
 
-  const handleLogin = async (name: string, email: string) => {
+  const handleLogin = (name: string, email: string) => {
     const newUser = { 
       ...MOCK_USER, 
       name, 
       email,
+      id: `user_${Date.now()}`, // ID único por sessão de login
       createdAt: new Date().toISOString(),
       onboardingCompleted: false
     };
     
-    // Webhook 1: Login
+    // Webhook de Login (sem travar o app)
     fetch('https://nen.auto-jornada.space/webhook/clientes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -143,11 +151,11 @@ const App: React.FC = () => {
     }).catch(() => {});
 
     setState(prev => ({ ...prev, isLoggedIn: true, user: newUser }));
-    navigateTo(View.ONBOARDING);
+    window.location.hash = 'onboarding';
   };
 
-  const handleOnboardingComplete = async (profile: UserProfile) => {
-    // Webhook 2: Dados do Formulário
+  const handleOnboardingComplete = (profile: UserProfile) => {
+    // Webhook de Dados
     fetch('https://nen.auto-jornada.space/webhook/clientes-infos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -159,17 +167,20 @@ const App: React.FC = () => {
       }),
     }).catch(() => {});
 
+    // Atualiza estado e marca como concluído
     setState(prev => ({
       ...prev,
       user: prev.user ? { ...prev.user, profile, onboardingCompleted: true } : null
     }));
-    navigateTo(View.DASHBOARD);
+    
+    window.location.hash = 'dashboard';
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('protocolo_premium_state');
-    setState({ user: null, modules: INITIAL_MODULES, checklist: {}, isLoggedIn: false, hasSeenWelcomeVideo: false });
-    window.location.hash = 'login';
+    if (window.confirm("Deseja realmente sair? Seus dados locais serão limpos.")) {
+      localStorage.removeItem(STORAGE_KEY);
+      window.location.href = '/'; // Recarrega do zero
+    }
   };
 
   const handleTonicToggle = (date: string, type: 'main' | 'complementary', tonicId?: string) => {
@@ -221,6 +232,8 @@ const App: React.FC = () => {
   };
 
   const isAuthPage = currentView === View.LOGIN || currentView === View.ONBOARDING;
+  
+  // Se estiver pronto, não mostra nada de login/onboarding
   if (isAuthPage) return renderView();
 
   return (
