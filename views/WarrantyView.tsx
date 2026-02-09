@@ -6,7 +6,7 @@ import { ChevronLeft, ShieldCheck, Mail, MessageCircle, Info } from 'lucide-reac
 
 export const WarrantyView: React.FC<{ onBack: () => void; firstAccessDate: string }> = ({ onBack, firstAccessDate }) => {
   const refundUrl = "https://nen.auto-jornada.space/webhook/refund";
-  const whatsappUrl = "https://wa.me/558394186965";
+  const whatsappUrl = "https://wa.me/15558648988";
   const supportEmail = "contato@suportmedia.com";
   
   const created = new Date(firstAccessDate);
